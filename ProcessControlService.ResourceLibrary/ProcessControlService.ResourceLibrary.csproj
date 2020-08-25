@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BBE74C77-A32A-41C4-80A1-B8A2AC26E731}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProcessControlService.ResourceLibrary</RootNamespace>
+    <AssemblyName>ProcessControlService.ResourceLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\ProcessControlService.ProcessWindow\bin\Debug\service\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AdvancedHMIDrivers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Common\AdvancedHMIDrivers.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.OPCAutomation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Common\Interop.OPCAutomation.dll</HintPath>
+    </Reference>
+    <Reference Include="MfgControl.AdvancedHMI.Drivers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Common\MfgControl.AdvancedHMI.Drivers.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="NModbus4">
+      <HintPath>..\Common\NModbus4.dll</HintPath>
+    </Reference>
+    <Reference Include="NModbus4, Version=2.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Common\NModbus4.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342">
+      <HintPath>..\Common\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Action\ActionContainer.cs" />
+    <Compile Include="Action\ActionsCollection.cs" />
+    <Compile Include="Action\ActionsManagement.cs" />
+    <Compile Include="Action\BaseAction.cs" />
+    <Compile Include="Common\CallProcessAction.cs" />
+    <Compile Include="Common\ConfigResourceDicAction.cs" />
+    <Compile Include="Common\LimitCurrentProcessInstanceNumber.cs" />
+    <Compile Include="Common\ResourceDicModel.cs" />
+    <Compile Include="Common\SelectNextParameterItemFromArrayAction.cs" />
+    <Compile Include="Common\SetDictionaryValue.cs" />
+    <Compile Include="Common\ShowStatusAction.cs" />
+    <Compile Include="Common\CommonResource.cs" />
+    <Compile Include="Common\TwoParameterCalculateAction.cs" />
+    <Compile Include="DataBinding\DBQuery.cs" />
+    <Compile Include="Machines\Actions\MachineAction.cs" />
+    <Compile Include="Machines\Actions\TagActionItem.cs" />
+    <Compile Include="Machines\Actions\TagsAction.cs" />
+    <Compile Include="Machines\Actions\WaitExpectedTagValueAction.cs" />
+    <Compile Include="Machines\DataSources\AllenBradleyDataSource.cs" />
+    <Compile Include="Machines\DataSources\DataSourceManagement.cs" />
+    <Compile Include="Machines\DataSources\FanucCNCDataSource.cs" />
+    <Compile Include="Machines\DataSources\MelsecFxNetDatasource.cs" />
+    <Compile Include="Machines\DataSources\MelsecFxSerialDatasource.cs" />
+    <Compile Include="Machines\DataSources\MelsecFxSerialOverTcpDatasource.cs" />
+    <Compile Include="Machines\DataSources\MelsecQNetDatasource.cs" />
+    <Compile Include="Machines\DataSources\ModbusRtuDataSource.cs" />
+    <Compile Include="Machines\DataSources\ModbusTCPDataSource.cs" />
+    <Compile Include="Machines\DataSources\ModbusTCPDataSourceNew.cs" />
+    <Compile Include="Machines\DataSources\OmronDataSource.cs" />
+    <Compile Include="Machines\DataSources\S7DataSource.cs" />
+    <Compile Include="Machines\DataSources\S7LinkedDataSource.cs" />
+    <Compile Include="Machines\DataSources\Step7DataSource.cs" />
+    <Compile Include="Machines\DataSources\ToyopucDataSource.cs" />
+    <Compile Include="Machines\DataSources\Utils\ConvertUtils.cs" />
+    <Compile Include="Machines\DataSources\LinkedDataSource.cs" />
+    <Compile Include="Common\WaitAction.cs" />
+    <Compile Include="DataBinding\BindingAction.cs" />
+    <Compile Include="DataBinding\BindingDataSet.cs" />
+    <Compile Include="DataBinding\DataBinding.cs" />
+    <Compile Include="Event\EventsCollection.cs" />
+    <Compile Include="Event\EventContainer.cs" />
+    <Compile Include="Event\EventsManagement.cs" />
+    <Compile Include="Event\BaseEvent.cs" />
+    <Compile Include="Machines\Alarm.cs" />
+    <Compile Include="Machines\AlarmCollections.cs" />
+    <Compile Include="Machines\AlarmDefinition.cs" />
+    <Compile Include="Machines\DataSources\DataSource.cs" />
+    <Compile Include="Machines\DataSources\InternalDataSource.cs" />
+    <Compile Include="Machines\Drivers\ABLogixDriver.cs" />
+    <Compile Include="Machines\Drivers\DistinguishDriver.cs" />
+    <Compile Include="Machines\Drivers\FanucCNCDriver.cs" />
+    <Compile Include="Machines\Drivers\fwlib32.cs" />
+    <Compile Include="Machines\Drivers\ModbusTCPDriver.cs" />
+    <Compile Include="Machines\Drivers\S7NetPlcDriver.cs" />
+    <Compile Include="Machines\Machine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Machines\MachineModel.cs" />
+    <Compile Include="Machines\MachinePartialClass.cs" />
+    <Compile Include="Machines\MachinePerformance.cs" />
+    <Compile Include="Machines\MachineStatus.cs" />
+    <Compile Include="Machines\Tag.cs" />
+    <Compile Include="Machines\TagAlarmDefinition.cs" />
+    <Compile Include="Machines\YumpooDrives\Algorithms\ConnectPool\ConnectPool.cs" />
+    <Compile Include="Machines\YumpooDrives\Algorithms\ConnectPool\IConnector.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SharpList.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftBaseClass.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftBasic.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftBuffer.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftCache.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftException.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftMail.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftMsgQueue.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftNumerical.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftSecurity.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftSqlOperate.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftVersion.cs" />
+    <Compile Include="Machines\YumpooDrives\BasicFramework\SoftZipped.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Address\DeviceAddressBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Address\DeviceAddressDataBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Address\McAddressData.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Address\ModbusAddress.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\HslReflectionHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\AlienMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\AllenBradleyMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\EFORTMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\EFORTMessagePrevious.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\FetchWriteMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\FinsMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\HslMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\INetMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\MelsecA1EBinaryMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\MelsecQnA3EAsciiMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\MelsecQnA3EBinaryMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\ModbusTcpMessage.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\IMessage\S7Message.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\ClassNetHandle.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\CommunicationProtocol.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\IReadWriteNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\IRobotNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetSupport.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkAlienClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkDataServerBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkDeviceBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkDeviceSoloBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkDoubleBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkFileServerBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkServerBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\NetworkBase\NetworkXBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\StateOne\AlienSession.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\StateOne\AppSession.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\StateOne\AsyncStateSend.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\StateOne\FileStateObject.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\StateOne\StateObject.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Net\StateOne\StateOneBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Security\Security.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Thread\ThreadLock.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\ByteTransformBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\ByteTransformHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\DataFormat.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\IByteTransform.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\RegularByteTransform.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\ReverseBytesTransform.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Transfer\ReverseWordTransform.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Types\HslTimeOut.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Types\IDataTransfer.cs" />
+    <Compile Include="Machines\YumpooDrives\Core\Types\OperateResult.cs" />
+    <Compile Include="Machines\YumpooDrives\DeviceAddressAttribute.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\ComplexNet\NetComplexClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\ComplexNet\NetComplexServer.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\DeviceNet\ClassDeviceNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\DeviceNet\DeviceState.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\AdvancedFileServer.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\FileBaseInfo.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\FileClientBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\FileMarkId.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\GroupFileContainer.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\GroupFileItem.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\IntegrationFileClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\FileNet\UltimateFileServer.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\PushNet\NetPushClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\PushNet\NetPushServer.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\PushNet\PushGroupClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\Redis\RedisClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\Redis\RedisHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\Redis\RedisSubscribe.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\SimplifyNet\NetSimplifyClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\SimplifyNet\NetSimplifyServer.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\SoftUpdateNet\ClassSoftUpdate.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\UdpNet\NetUdpClient.cs" />
+    <Compile Include="Machines\YumpooDrives\Enthernet\UdpNet\NetUdpServer.cs" />
+    <Compile Include="Machines\YumpooDrives\Instrument\Temperature\DAM3601.cs" />
+    <Compile Include="Machines\YumpooDrives\Language\DefaultLanguage.cs" />
+    <Compile Include="Machines\YumpooDrives\Language\English.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\Core\ILogNet.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\Core\LogBase.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\Core\Types.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\LogNetManagment.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\Logs\LogNetDateTime.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\Logs\LogNetFileSize.cs" />
+    <Compile Include="Machines\YumpooDrives\LogNet\Logs\LogNetSingle.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModbusAscii\ModbusAscii.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModbusInfo.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModBusMonitorAddress.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModbusRtu\ModbusRtu.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModBusState.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModbusTcp\ModbusTcpNet.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\ModbusTcp\ModbusTcpServer.cs" />
+    <Compile Include="Machines\YumpooDrives\ModBus\MonitorAddress.cs" />
+    <Compile Include="Machines\YumpooDrives\NamespaceDoc.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\AllenBradley\AllenBradleyHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\AllenBradley\AllenBradleyNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\AllenBradley\AllenBradleyNetNew.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecA1EDataType.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecA1ENet.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecA3CNet1.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecA3CNet1OverTcp.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecFxLinks.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecFxLinksOverTcp.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecFxSerial.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecFxSerialOverTcp.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecMcAsciiNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecMcDataType.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Melsec\MelsecMcNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Omron\OmronFinsDataType.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Omron\OmronFinsNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Omron\OmronFinsNetHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Panasonic\PanasonicMewtocol.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Siemens\SiemensFetchWriteNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Siemens\SiemensPLCS.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Siemens\SiemensPPI.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Siemens\SiemensS7Net.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Siemens\SiemensS7Server.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Toyopuc\ToyopucHelper.cs" />
+    <Compile Include="Machines\YumpooDrives\Profinet\Toyopuc\ToyopucNet.cs" />
+    <Compile Include="Machines\YumpooDrives\Robot\EFORT\EfortData.cs" />
+    <Compile Include="Machines\YumpooDrives\Robot\EFORT\ER7BC10.cs" />
+    <Compile Include="Machines\YumpooDrives\Robot\EFORT\ER7BC10Previous.cs" />
+    <Compile Include="Machines\YumpooDrives\Serial\CRCSupport.cs" />
+    <Compile Include="Machines\YumpooDrives\Serial\FP1_C72.cs" />
+    <Compile Include="Machines\YumpooDrives\Serial\SerialBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Serial\SerialDeviceBase.cs" />
+    <Compile Include="Machines\YumpooDrives\Serial\SoftLRC.cs" />
+    <Compile Include="Machines\YumpooDrives\StringResources.cs" />
+    <Compile Include="Machines\YumpooDrives\TimeOut.cs" />
+    <Compile Include="Processes\Conditions\AllTagsOnCondition.cs" />
+    <Compile Include="Processes\Conditions\Condition.cs" />
+    <Compile Include="Processes\Conditions\ConditionModel.cs" />
+    <Compile Include="Processes\Conditions\EventCondition.cs" />
+    <Compile Include="Processes\Conditions\InitializeCondition.cs" />
+    <Compile Include="Processes\Conditions\MachineEvent.cs" />
+    <Compile Include="Processes\Conditions\MultiTagsChangeCondition.cs" />
+    <Compile Include="Processes\Conditions\MultiTagsCondition.cs" />
+    <Compile Include="Processes\Conditions\MultiTagsCondition.TagModel.cs" />
+    <Compile Include="Processes\Conditions\MultiTagsOffCondition.cs" />
+    <Compile Include="Processes\Conditions\MultiTagsOnCondition.cs" />
+    <Compile Include="Processes\Conditions\SingleTagChangeCondition.cs" />
+    <Compile Include="Processes\Conditions\SingleTagHighCondition.cs" />
+    <Compile Include="Processes\Conditions\SingleTagOffCondition.cs" />
+    <Compile Include="Processes\Conditions\SingleTagOnCondition.cs" />
+    <Compile Include="Processes\Conditions\TimerCondition.cs" />
+    <Compile Include="Processes\CurrentStepInfo.cs" />
+    <Compile Include="Processes\ParameterBind\InParameterBind.cs" />
+    <Compile Include="Processes\ParameterBind\OutParameterBind.cs" />
+    <Compile Include="Processes\ParameterBind\ParameterBind.cs" />
+    <Compile Include="Processes\ParameterBind\ParameterBindType.cs" />
+    <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\ProcessInstance.cs" />
+    <Compile Include="Processes\ProcessInstanceManager.cs" />
+    <Compile Include="Processes\ProcessLocker.cs" />
+    <Compile Include="Processes\ProcessManagement.cs" />
+    <Compile Include="Processes\ProcessRecordSqLiteUtil.cs" />
+    <Compile Include="Processes\ProcessRecordXmlUtil.cs" />
+    <Compile Include="Processes\Steps\StepAction.cs" />
+    <Compile Include="Processes\Steps\StepCheck.cs" />
+    <Compile Include="Processes\Steps\StepCheckType.cs" />
+    <Compile Include="Processes\Steps\StepInstance.cs" />
+    <Compile Include="Products\Product.cs" />
+    <Compile Include="Products\ProductSpec.cs" />
+    <Compile Include="Products\ProductType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PackageProfile.cs" />
+    <Compile Include="Queues\FIFOQueue.cs" />
+    <Compile Include="Queues\LineQueueManager.cs" />
+    <Compile Include="Queues\Route.cs" />
+    <Compile Include="Queues\Switch.cs" />
+    <Compile Include="ResourceTemplate\MachineResourceTemplate.cs" />
+    <Compile Include="ResourceTemplate\ResourceTemplateAction.cs" />
+    <Compile Include="Processes\Steps\Step.cs" />
+    <Compile Include="StdContractAttribute.cs" />
+    <Compile Include="Storage\Rules\Coordinate.cs" />
+    <Compile Include="Storage\Rules\EntryRule.cs" />
+    <Compile Include="Storage\Rules\ExitRule.cs" />
+    <Compile Include="Storage\Rules\IEntryRule.cs" />
+    <Compile Include="Storage\Rules\IExitRule.cs" />
+    <Compile Include="Storage\Rules\IRuleBase.cs" />
+    <Compile Include="Storage\Rules\RuleBase.cs" />
+    <Compile Include="Storage\Storage.cs" />
+    <Compile Include="Storage\StorageActions.cs" />
+    <Compile Include="Tracking\Location.cs" />
+    <Compile Include="Tracking\ProductTrayType.cs" />
+    <Compile Include="Tracking\TraySpec.cs" />
+    <Compile Include="Tracking\SimpleUnitContainer.cs" />
+    <Compile Include="Tracking\ITrackUnit.cs" />
+    <Compile Include="Tracking\ProductTray.cs" />
+    <Compile Include="Tracking\UnitContainer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Machines\YumpooDrives\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Machines\YumpooDrives\LogNet\View\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProcessControlService.Contracts\ProcessControlService.Contracts.csproj">
+      <Project>{6a6efd8a-e7a6-496d-9fbf-513444c81612}</Project>
+      <Name>ProcessControlService.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProcessControlService.ResourceFactory\ProcessControlService.ResourceFactory.csproj">
+      <Project>{669f447a-64fa-437a-ac20-00432904e77c}</Project>
+      <Name>ProcessControlService.ResourceFactory</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FreeSql">
+      <Version>1.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="FreeSql.DbContext">
+      <Version>1.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="FreeSql.Extensions.JsonMap">
+      <Version>1.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="FreeSql.Provider.Sqlite">
+      <Version>1.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="FreeSql.Repository">
+      <Version>1.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="log4net">
+      <Version>2.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.7.2</Version>
+    </PackageReference>
+    <PackageReference Include="S7netplus">
+      <Version>0.5.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

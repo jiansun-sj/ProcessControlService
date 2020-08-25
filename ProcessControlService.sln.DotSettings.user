@@ -1,0 +1,77 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005CAdvancedHMIDrivers_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005CInterop_002EOPCAutomation_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005CMfgControl_002EAdvancedHMI_002EDrivers_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005CNModbus4_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005CNModbus4_002Exml/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005COracle_002EManagedDataAccess_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cjians_005CDesktop_005CProjectCode_005CProcessControlService_005CCommon_005CS7_002ENet_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\jians\Desktop\ProjectCode\ProcessControlService\packages\FreeSql.1.6.0-preview0611\lib\net45\FreeSql.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\jians\Desktop\ProjectCode\ProcessControlService\Common\S7.Net.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\jians\.nuget\packages\s7netplus\0.5.0\lib\net452\S7.Net.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/Environment/Hierarchy/EntityFrameworkOptions/IsAlreadyNotifiedAboutEntityFramework/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=31c2b4d0_002Da949_002D4b6e_002D990b_002D82df4a00b891/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ReadProcessRecordTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.ProcessRecordTest.ReadProcessRecordTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3b9ccfea_002D78b1_002D484f_002Dbe7d_002D185ad3156703/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiTagsOnConditionAsyncTest #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.MultiTagsOnConditionTest.MultiTagsOnConditionAsyncTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::BC4F17E6-D0F9-4554-8DC3-B58CCEAE821F::.NETFramework,Version=v4.7.1::ResourceFactory.Test.MemoryMonitorTest.BasicValueTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b9ea39f_002Ddde2_002D4b93_002D9239_002D136984560377/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiTagsOnConditionAsyncTest #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.MultiTagsOnConditionTest.MultiTagsOnConditionAsyncTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=75217526_002D0b2e_002D48d3_002Dad98_002De5fdcbc1b379/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiTagsOnConditionAsyncTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.MultiTagsOnConditionTest.MultiTagsOnConditionAsyncTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bc049197_002D592c_002D44e3_002Db4fa_002D2cfd5648787b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ReadProcessRecordTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.ProcessRecordTest.ReadProcessRecordTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bcd0ec4e_002D4cee_002D4658_002Da78c_002D16b39e3a53bc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ReadProcessRecordTest #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.ProcessRecordTest.ReadProcessRecordTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d260bfe0_002D0c4e_002D40d7_002Dbb93_002D466a1291f3b8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiTagsOnConditionAsyncTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.MultiTagsOnConditionTest.MultiTagsOnConditionAsyncTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dbeef841_002D3f43_002D438e_002Db100_002D604a87f791f3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiTagsOnConditionTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.MultiTagsOnConditionTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e11e6209_002D5b1a_002D4469_002D8b2f_002D6106d620b1d5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ModelContainTypeJsonTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::BC4F17E6-D0F9-4554-8DC3-B58CCEAE821F::.NETFramework,Version=v4.7.1::ResourceFactory.Test.CallResourceServiceTest.ModelContainTypeJsonTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f2392ccf_002D570a_002D459d_002Dba7b_002D8ad3c025f9d5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ModelContainTypeJsonTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::BC4F17E6-D0F9-4554-8DC3-B58CCEAE821F::.NETFramework,Version=v4.7.1::ResourceFactory.Test.CallResourceServiceTest.ModelContainTypeJsonTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f5d8597a_002Df89b_002D4ff4_002Da20d_002Df41cb003ffc4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="BasicValueTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::BC4F17E6-D0F9-4554-8DC3-B58CCEAE821F::.NETFramework,Version=v4.7.1::ResourceFactory.Test.MemoryMonitorTest.BasicValueTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::BC4F17E6-D0F9-4554-8DC3-B58CCEAE821F::.NETFramework,Version=v4.7.1::ResourceFactory.Test.CallResourceServiceTest.ModelContainTypeJsonTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f765d0aa_002D7069_002D4865_002Da2be_002D760e18c82cb6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MultiTagsOnConditionAsyncTest #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::8756EC6D-AEE4-4662-8BFF-71034B5E1201::.NETCoreApp,Version=v3.1::ResourceLibrary.UnitTest.MultiTagsOnConditionTest.MultiTagsOnConditionAsyncTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	</wpf:ResourceDictionary>
