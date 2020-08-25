@@ -1,0 +1,136 @@
+<root>
+<Configs>
+	<!-- <DBConnection ConnectionString="Database='controlplatdb';Data Source='localhost';User Id='root';Password='Yumpoo888';port=3306;charset='utf8';pooling=true"/> -->
+	<Redundancy Enable="false"/>
+</Configs>
+<Resources>
+	<Resource Type="Machine" Name="BTSTester" NeedDataSync="True" Enable="true" >
+		<DataSources>
+			<DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+				<Tag Type="Tag" Name="AccumulateTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="GetAccumulate">
+				<OutParameter Name="Accumulate1" Type="Int16" />
+				<ActionItem Type="ReadTag" Tag="AccumulateTag" OutParameter="Accumulate1" />
+			</Action>
+			<Action Type="TagsAction" Name="SetAccumulate">
+				<InParameter Name="Accumulate2" Type="Int16" />
+				<ActionItem Type="WriteTag" Tag="AccumulateTag" InParameter="Accumulate2" />
+			</Action>
+		 </Actions>
+	</Resource>
+	<Resource Type="Machine" Name="ABPLC1" NeedDataSync="True" Enable="false" >
+		<DataSources>
+			<DataSource Type="ABDataSource" Name="ABChannel1" IPAddress="192.168.1.244" UpdateInterval="1000">
+				<Tag Type="Tag" Name="IncreaseTagTest" Address="IncreaseTagTest" TagType="int16"/>
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="IncreaseAction">
+				<InParameter Name="NewValue" Type="int16" />
+				<ActionItem Type="WriteTag" Tag="IncreaseTagTest" InParameter="NewValue" />
+			</Action>
+		 </Actions>
+	</Resource>
+	
+	<Resource Type="Process" Name="IncreaseProcess" Enable="true" LogOutput="false" IsProcessRecord="false" NeedDataSync="True" >
+		<Condition Type="TimerCondition" Name="定时器1" Interval_0.1s="50" Init="True"/>
+		<ProcessParameters>
+		  <ProcessParameter Name="ProcessPar1" Type="int16" DefaultValue="0"/>
+		  <ProcessParameter Name="ProcessPar2" Type="int16" DefaultValue="1"/>
+		  <ProcessParameter Name="ProcessPar3" Type="int16" DefaultValue="0"/>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="显示运行模式" Wait="5" NextStepIndex="2">
+				<StepAction Container="Common" Action="ShowStatusAction"/>
+			</Step>
+			<Step Index="2" Name="获取Accumulate" Wait="5" NextStepIndex="3">
+			  <StepAction Container="BTSTester" Action="GetAccumulate">
+				<OutParameter ProcessParameter="ProcessPar1" ActionParameter="Accumulate1"/>
+				<ShowParameter ProcessParameter="ProcessPar1"/>
+			  </StepAction>
+			</Step>
+			<Step Index="3" Name="等待1" Wait="5" NextStepIndex="4">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="1500"/>
+				</StepAction>
+			</Step>
+			<Step Index="4" Name="递增" Wait="5" NextStepIndex="5">
+				<StepAction Container="Common" Action="TwoParameterCalculateAction">
+					<InParameter ProcessParameter="ProcessPar1" ActionParameter="ActionParameter1"/>
+					<InParameter ProcessParameter="ProcessPar2" ActionParameter="ActionParameter2"/>
+					<InParameter ActionParameter="CalculateType" ConstValue="Add"/>
+					<OutParameter ProcessParameter="ProcessPar3" ActionParameter="ResultParameter"/>
+				</StepAction>
+			</Step>	
+			<Step Index="5" Name="等待2" Wait="5" NextStepIndex="6">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="200"/>
+				</StepAction>
+			</Step>
+			<Step Index="6" Name="设置Accumulate" Wait="5" NextStepIndex="7">
+			  <StepAction Container="BTSTester" Action="SetAccumulate">
+				<InParameter ProcessParameter="ProcessPar3" ActionParameter="Accumulate2"/>
+			  </StepAction>
+			</Step>
+			<Step Index="7" Name="同步Sync" Wait="5" Sync="true" NextStepIndex="-1">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="500"/>
+					<ShowParameter ProcessParameter="ProcessPar3"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+
+	<Resource Type="Process" Name="IncreaseProcess2" Enable="true" LogOutput="false" IsProcessRecord="false" NeedDataSync="True" >
+		<Condition Type="TimerCondition" Name="定时器1" Interval_0.1s="10" Init="True"/>
+		<ProcessParameters>
+		  <ProcessParameter Name="ProcessPar1" Type="int16" DefaultValue="0"/>
+		  <ProcessParameter Name="ProcessPar2" Type="int16" DefaultValue="1"/>
+		  <ProcessParameter Name="ProcessPar3" Type="int16" DefaultValue="0"/>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="显示运行模式" Wait="5" NextStepIndex="2">
+				<StepAction Container="Common" Action="ShowStatusAction"/>
+			</Step>
+			<Step Index="2" Name="获取Accumulate" Wait="5" NextStepIndex="3">
+			  <StepAction Container="BTSTester" Action="GetAccumulate">
+				<OutParameter ProcessParameter="ProcessPar1" ActionParameter="Accumulate1"/>
+				<ShowParameter ProcessParameter="ProcessPar1"/>
+			  </StepAction>
+			</Step>
+			<Step Index="3" Name="等待1" Wait="5" NextStepIndex="4">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="1500"/>
+				</StepAction>
+			</Step>
+			<Step Index="4" Name="递增" Wait="5" NextStepIndex="5">
+				<StepAction Container="Common" Action="TwoParameterCalculateAction">
+					<InParameter ProcessParameter="ProcessPar1" ActionParameter="ActionParameter1"/>
+					<InParameter ProcessParameter="ProcessPar2" ActionParameter="ActionParameter2"/>
+					<InParameter ActionParameter="CalculateType" ConstValue="Add"/>
+					<OutParameter ProcessParameter="ProcessPar3" ActionParameter="ResultParameter"/>
+				</StepAction>
+			</Step>	
+			<Step Index="5" Name="等待2" Wait="5" NextStepIndex="6">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="200"/>
+				</StepAction>
+			</Step>
+			<Step Index="6" Name="设置Accumulate" Wait="5" NextStepIndex="7">
+			  <StepAction Container="BTSTester" Action="SetAccumulate">
+				<InParameter ProcessParameter="ProcessPar3" ActionParameter="Accumulate2"/>
+			  </StepAction>
+			</Step>
+			<Step Index="7" Name="同步Sync" Wait="5" Sync="true" NextStepIndex="-1">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="500"/>
+					<ShowParameter ProcessParameter="ProcessPar3"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+ </Resources>
+ </root>

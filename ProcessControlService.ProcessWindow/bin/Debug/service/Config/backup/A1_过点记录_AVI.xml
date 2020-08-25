@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<root>
+  <Configs>
+  </Configs>
+  <Resources>
+    <!--定义主流程，分配执行子流程的PLC设备-->
+    <Resource Type="Process" Name="AVIRecordMainProcess" Enable="true" LogOutput="true" AllowAsync="true" IsProcessRecord="false">
+      
+	  <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="AviStation"/>
+        </ProcessParameter>
+        <ProcessParameter Name="TrigStation" Type="string"/>
+        <ProcessParameter Name="CallingTag" Type="string"/>
+      </ProcessParameters>
+      
+	  <Condition Type="MultiTagsChangeCondition" Name="ConditionName" Container="MachineName" Tag="TagName">
+        <TrigTags>
+            <!--立体库-->
+            <TrigTag Machine="HB01" Tag="SkidPassTrig"/>
+            <TrigTag Machine="HB02" Tag="SkidPassTrig"/>
+            <TrigTag Machine="HB03" Tag="SkidPassTrig"/>
+            <TrigTag Machine="HB04" Tag="SkidPassTrig"/>
+            <TrigTag Machine="HB05" Tag="SkidPassTrig"/>
+            <!--011-->
+            <TrigTag Machine="IN01" Tag="SkidPassTrig"/>
+            <TrigTag Machine="IN02" Tag="SkidPassTrig"/>
+            <TrigTag Machine="BW05" Tag="SkidPassTrig"/>
+            <TrigTag Machine="CS05" Tag="SkidPassTrig"/>
+            <!--041-->
+            <TrigTag Machine="ES05" Tag="SkidPassTrig"/>
+            <TrigTag Machine="UB05" Tag="SkidPassTrig"/>
+            <TrigTag Machine="UB10" Tag="SkidPassTrig"/>
+            <TrigTag Machine="UB30" Tag="SkidPassTrig"/>
+            <TrigTag Machine="UB35" Tag="SkidPassTrig"/>
+            <TrigTag Machine="ES25" Tag="SkidPassTrig"/>
+            <TrigTag Machine="SE45" Tag="SkidPassTrig"/>
+            <!--111-->
+            <TrigTag Machine="WX25" Tag="SkidPassTrig"/>
+            <TrigTag Machine="WX10" Tag="SkidPassTrig"/>
+            <TrigTag Machine="WX30" Tag="SkidPassTrig"/>
+            <TrigTag Machine="WX15" Tag="SkidPassTrig"/>
+            <TrigTag Machine="WX20" Tag="SkidPassTrig"/>
+           <!-- <TrigTag Machine="WX21" Tag="SkidPassTrig"/>
+            <TrigTag Machine="OU01" Tag="SkidPassTrig"/>-->
+
+            <TrigTag Machine="CS15" Tag="SkidPassTrig"/>
+            <TrigTag Machine="CS20" Tag="SkidPassTrig"/>
+
+            <TrigTag Machine="CS30" Tag="SkidPassTrig"/>
+            <TrigTag Machine="CS35" Tag="SkidPassTrig"/>
+
+            <!--021-->
+            <TrigTag Machine="BW25" Tag="SkidPassTrig"/>
+            <TrigTag Machine="PT65" Tag="SkidPassTrig"/>
+            <TrigTag Machine="ED42" Tag="SkidPassTrig"/>
+            <TrigTag Machine="ED45" Tag="SkidPassTrig"/>
+            
+           <!--071-->
+           <TrigTag Machine="PS05" Tag="SkidPassTrig"/>
+           <TrigTag Machine="PS45" Tag="SkidPassTrig"/>
+           <TrigTag Machine="PS35" Tag="SkidPassTrig"/>
+           <TrigTag Machine="TC05" Tag="SkidPassTrig"/>
+
+            <!--051-->
+            <TrigTag Machine="CS10" Tag="SkidPassTrig"/>
+            <!--081-->
+            <TrigTag Machine="TC10" Tag="SkidPassTrig"/>
+            <TrigTag Machine="TC20" Tag="SkidPassTrig"/>
+            <TrigTag Machine="TC50" Tag="SkidPassTrig"/>
+
+            <!--031-->
+            <TrigTag Machine="ED55" Tag="SkidPassTrig"/>
+            <!--061-->
+            <TrigTag Machine="PR05" Tag="SkidPassTrig"/>
+        </TrigTags>
+        <OutParameter MachineName="TrigStation" TagName="CallingTag"/>
+      </Condition>
+     
+	  <Steps>
+        <!--分配Agv-->
+        <Step Index="1" Name="配置AVI站点资源" Wait="5" NextStepIndex="2">
+          <StepAction Container="Common" Action="ConfigResourceDicAction">
+            <InParameter ActionParameter="Key" ConstValue="AviStation"/>
+            <InParameter ActionParameter="Value" ProcessParameter="TrigStation"/>
+            <InParameter ActionParameter="InDictionaryParameter" ProcessParameter="ResourceDic"/>
+            <OutParameter ActionParameter="OutDictionaryParameter" ProcessParameter="ResourceDic"/>
+          </StepAction>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="2" Name="调用AVI过点记录流程" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="AVIRecordSkidPass"/>
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="ResourceDic"/>
+            <InParameter ActionParameter="SubProcessResources" ConstValue="ResourceDic"/>
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+    
+    <!--定义过点记录流程-->
+    <Resource Type="Process" Name="AVIRecordSkidPass" Enable="true" LogOutput="true" AllowAsync="true" IsProcessRecord="false">
+	  <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="AviStation"/>
+        </ProcessParameter>
+		<!--过点记录数据-->
+        <ProcessParameter Name="PassMessage" Type="string"/>
+		<ProcessParameter Name="RecordTrigNumber" Type="int16"/>
+        <ProcessParameter Name="OperateMode" Type="int16"/>
+		<ProcessParameter Name="Source" Type="int16"/>
+		<ProcessParameter Name="Destination" Type="int16"/>
+        <ProcessParameter Name="ShouldUpload" Type="bool"/>
+        <ProcessParameter Name="RecordId" Type="long"/>
+		<!--过点处理结果-->
+		<ProcessParameter Name="RecordResult" Type="int16" DefaultValue="1"/>
+		<!--上传给MOM系统的Json字符串-->
+		<ProcessParameter Name="UploadMessageJson" Type="string"/>
+		<ProcessParameter Name="VIN" Type="string"/>
+      </ProcessParameters>
+     
+	  <Steps>
+        <Step Index="1" Name="读取PLC过点数据" Wait="50" NextStepIndex="2">
+          <StepAction Container="{Using AVIStationPointer, Binding {ResourceDic, Key=AviStation}}" Action="ReadPassMessage">
+            <OutParameter ActionParameter="PassMessage" ProcessParameter="PassMessage"/>
+			<OutParameter ActionParameter="RecordTrigNumber" ProcessParameter="RecordTrigNumber"/>
+			<OutParameter ActionParameter="OperateMode" ProcessParameter="OperateMode"/>
+			<OutParameter ActionParameter="Source" ProcessParameter="Source"/>
+			<OutParameter ActionParameter="Destination" ProcessParameter="Destination"/>
+          </StepAction> 
+        </Step>
+        
+		<!--滞留超时，超时在界面进行报警-->
+        <Step Index="2" Name="数据库记录过点数据判断车身是否滞留超时" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using AVIStationPointer, Binding {ResourceDic, Key=AviStation}}" Action="RecordSkidPassMessage">
+            <InParameter ActionParameter="PassMessage" ProcessParameter="PassMessage"/>
+			<InParameter ActionParameter="RecordTrigNumber" ProcessParameter="RecordTrigNumber"/>
+			<InParameter ActionParameter="OperateMode" ProcessParameter="OperateMode"/>
+			<InParameter ActionParameter="Source" ProcessParameter="Source"/>
+			<InParameter ActionParameter="Destination" ProcessParameter="Destination"/>
+
+            <OutParameter ActionParameter="UploadMessageJson" ProcessParameter="UploadMessageJson" />
+			<OutParameter ActionParameter="VIN" ProcessParameter="VIN" />
+            <OutParameter ActionParameter="RecordResult" ProcessParameter="RecordResult" />
+            <OutParameter ActionParameter="RecordId" ProcessParameter="RecordId" />
+            <OutParameter ActionParameter="ShouldUpload" ProcessParameter="ShouldUpload" />
+
+            <!--输入  站点名-->
+            <!--输入  过点数据-->
+            <!--这个Step里面需要做超时报警，超时报警时间需要可设定，设定时间预存在数据库里面-->
+          </StepAction>
+        </Step>
+
+        <Step Index="3" Name="生成车体队列" Wait="50" NextStepIndex="4">
+          <StepAction Container="AVICenter" Action="GenerateSkidQueue">
+		    <InParameter ActionParameter="ResourceDic" ProcessParameter="ResourceDic"/>
+            <InParameter ActionParameter="VIN" ProcessParameter="VIN"/>
+            <InParameter ActionParameter="Destination" ProcessParameter="Destination"/>
+          </StepAction>
+
+          <StepChecks>
+            <!--判断是否需要上传MOM系统，判断RFID读取Tag数据是不是失败-->
+            <!--状态码：-->
+            <!-- false: 不需要上传MOM系统过点信息-->
+            <!-- true: 需要上传MOM系统-->
+            <StepCheck ProcessParameter="ShouldUpload" ConstValue="true" NextStepIndex="4" />
+            <StepCheck ProcessParameter="ShouldUpload" ConstValue="false" NextStepIndex="5" />
+          </StepChecks>
+        </Step>
+        
+        <Step Index="4" Name="上传MOM系统过点信息" Wait="5" NextStepIndex="5">
+          <StepAction Container="AVICenter" Action="UploadSkidPassInfo">
+            <InParameter ActionParameter="UploadMessageJson" ProcessParameter="UploadMessageJson"/>
+            <InParameter ActionParameter="RecordId" ProcessParameter="RecordId" />
+			<OutParameter ActionParameter="RecordResult" ProcessParameter="RecordResult" />
+            <!--重新上传过点数据次数可配置-->
+            <!--判断MOM系统接收数据是否成功，上传MOM系统次数是不是超过上限次数-->
+            <!--状态码：-->
+            <!--  1: MOM系统反馈接收数据成功  -->
+            <!--  20: MOM系统反馈接收数据失败 ,异常-->
+          </StepAction>
+        </Step>
+        
+        <Step Index="5" Name="PLC写入过点处理结果" Wait="50" NextStepIndex="-1">
+          <StepAction Container="{Using AVIStationPointer, Binding {ResourceDic, Key=AviStation}}" Action="WriteAVIRecordSkidPassResult">
+            <InParameter ActionParameter="RecordResult" ProcessParameter="RecordResult" />
+            <InParameter ActionParameter="RecordId" ProcessParameter="RecordId" />
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+  </Resources>
+</root>

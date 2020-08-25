@@ -1,0 +1,33 @@
+﻿<root>
+	<Configs>
+	</Configs>
+	<Resources>
+		<Resource Type="Machine" Name="TestMachine" NeedDataSync="False" Enable="true">
+			<DataSources>
+				<DataSource Type="ModbusRtuDataSource" Name="test1" Port="COM1" BaudRate="9600" DataBits="8" Parity="Even" UpdateInterval="2200">
+					<!--线圈固定开头DO-->
+					<Tag  Name="TestCoil" Address="DO0" TagType="bool" />
+					<Tag  Name="S2TestCoil" Address="S=2;DO0" TagType="bool" />
+					<!--离散输入固定开头DI-->
+					<Tag  Name="TestDiscrete" Address="DI0" TagType="bool" />
+					<Tag  Name="S2TestDiscrete" Address="S=2;DI0" TagType="bool" />
+					
+					<!--输入寄存器固定开头AI-->
+					<Tag  Name="AI0" Address="AI0" TagType="short" />
+					<Tag  Name="S2AI0" Address="S=2;AI0" TagType="short" />
+					<Tag  Name="AI2" Address="AI2" TagType="int32" />
+					<Tag  Name="S2AI2" Address="S=2;AI2" TagType="int32" />
+
+					<!--保持寄存器固定开头AO-->
+					<Tag  Name="AO0" Address="AO0" TagType="short" />
+					<Tag  Name="AO2" Address="AO2" TagType="int32" />
+
+					<!--固定开头之后是寄存器的偏移量-->
+				</DataSource>
+			</DataSources>
+		</Resource>
+
+
+	</Resources>
+</root>
+

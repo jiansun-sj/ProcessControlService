@@ -1,0 +1,67 @@
+﻿<root>
+	<Configs>
+		<Redundancy Enable="False" />
+	</Configs>
+	<Resources>
+		<Resource Type="Machine" Name="CastingMachine" Enable="true">
+			<DataSources>
+				<DataSource Type="MelsecQNetDatasource" Name="MelsecQGroup" IP="192.168.6.26" Port="5200" >        
+					<Tag Name="Open" TagType="bool" Address="M2210" />
+					<Tag Name="Paint" TagType="bool" Address="M2209" />
+					<Tag Name="Shot" TagType="bool" Address="M2211" />
+
+					<!-- 热模模式 -->
+					<Tag Name="Model" TagType="bool" Address="M2212" />
+					<!-- 二维码下发 -->
+					<Tag Name="pro_no_request" TagType="bool" Address="M2200" />
+					<Tag Name="pro_no_send_over" TagType="bool" Address="M2250" />
+					<Tag Name="pro_no_read_ok" TagType="bool" Address="M2201" />
+					<Tag Name="download_barcode" TagType="string" Address="D550.20" />
+					<!-- 完整性检测 -->
+					<Tag Name="check_request" TagType="bool" Address="M2202" />
+					<Tag Name="check_ok" TagType="bool" Address="M2203" />
+					<Tag Name="check_fall_down" TagType="bool" Address="M2204" />
+					<Tag Name="check_defect" TagType="bool" Address="M2205" />
+					<Tag Name="check_read_ok" TagType="bool" Address="M2251" />
+
+					<Tag Name="casting_ng" TagType="bool" Address="M2214" />
+					<!--扫码-->
+					<Tag Name="scan_finish" TagType="bool" Address="M2208" />
+					<Tag Name="upload_barcode" TagType="string" Address="D570.20" />		
+					<Tag Name="scan_barcode" TagType="string" Address="D580.20" />
+					<Tag Name="scan_ok" TagType="bool" Address="M2206" />
+					<Tag Name="scan_ng" TagType="bool" Address="M2207" />
+					<Tag Name="scan_read_ok" TagType="bool" Address="M2252" />
+					<!-- fault -->
+					<Tag Name="hot_die_fault" TagType="bool" Address="M2253" />
+					<Tag Name="check_fault" TagType="bool" Address="M2254" />
+					<Tag Name="scan_fault" TagType="bool" Address="M2255" />
+
+					<Tag Name="casting_state" TagType="bool" Address="M2213" />
+					<!--Alarms-->
+					<Tag Name="casting_alarm01" TagType="bool" Address="M2220" />
+					<Tag Name="casting_alarm02" TagType="bool" Address="M2221" />
+					<Tag Name="casting_alarm03" TagType="bool" Address="M2222" />
+					<Tag Name="casting_alarm04" TagType="bool" Address="M2223" />
+					<Tag Name="casting_alarm05" TagType="bool" Address="M2224" />
+					<Tag Name="casting_alarm06" TagType="bool" Address="M2225" />
+					<Tag Name="paint_state" TagType="bool" Address="M2226" />
+
+					<!-- 产品型号 -->
+					<Tag Name="ProductTypeNo" TagType="string" Address="D5400.14" />
+					<!-- 队列 -->
+					<Tag Name="CBM" TagType="string" Address="D450.20" />
+					<Tag Name="YYM" TagType="string" Address="D460.20" />
+					<Tag Name="KYM" TagType="string" Address="D470.20" />
+					<Tag Name="CM1" TagType="string" Address="D1400.20" />
+					<Tag Name="CM2" TagType="string" Address="D1410.20" />
+					<Tag Name="CM3" TagType="string" Address="D1420.20" />
+					<Tag Name="CM4" TagType="string" Address="D1430.20" />
+					<Tag Name="CM5" TagType="string" Address="D1440.20" />
+					<Tag Name="CM6" TagType="string" Address="D1450.20" />
+				</DataSource>
+			</DataSources>
+		</Resource>
+
+	</Resources>
+</root>

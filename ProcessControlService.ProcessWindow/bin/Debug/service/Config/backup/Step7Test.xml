@@ -1,0 +1,31 @@
+﻿<root>
+	<Configs>
+	</Configs>
+	<Resources>
+		<Resource Type="Machine" Name="Step7Machine" Enable="true">
+			<DataSources>
+				<DataSource Type="Step7DataSource" Name="VDSGroup" IPAddress="192.168.6.24" CpuType="S71200" Rack="0" Slot="0"  >
+					<Tag Name="vds_state"   TagType="bool" Address="DB100.2.0" />
+					<Tag Name="VDS_Alarm01" TagType="bool" Address="DB100.5.0" />
+					<Tag Name="VDS_Alarm02" TagType="bool" Address="DB100.5.1" />
+					<Tag Name="VDS_Alarm03" TagType="bool" Address="DB100.5.2" />
+					<Tag Name="VDS_Alarm04" TagType="bool" Address="DB100.7.0" />
+					<Tag Name="VDS_Alarm05" TagType="bool" Address="DB100.7.1" />
+					<Tag Name="VDS_Alarm06" TagType="bool" Address="DB100.7.2" />
+					<Tag Name="VDS_Alarm07" TagType="bool" Address="DB100.7.3" />
+					<Tag Name="VDS_Alarm08" TagType="bool" Address="DB100.9.0" />
+					<Tag Name="VDS_Alarm09" TagType="bool" Address="DB100.11.0" />
+					<Tag Name="VDS_Alarm10" TagType="bool" Address="DB100.11.1" />
+					<Tag Name="VDS_Alarm11" TagType="bool" Address="DB100.13.0" />
+					<Tag Name="VDS_Alarm12" TagType="bool" Address="DB100.13.1" />
+					<Tag Name="VDS_Alarm13" TagType="bool" Address="DB100.15.0" />
+					<Tag Name="VDS_Alarm14" TagType="bool" Address="DB100.15.1" />
+					<Tag Name="VDS_Alarm15" TagType="bool" Address="DB100.15.2" />
+					<Tag Name="Standby" TagType="bool" Address="DB100.17.0" />
+				</DataSource>
+			</DataSources>
+		</Resource>
+
+	</Resources>
+</root>
+

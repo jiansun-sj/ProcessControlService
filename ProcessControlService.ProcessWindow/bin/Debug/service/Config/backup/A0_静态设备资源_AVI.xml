@@ -1,0 +1,1246 @@
+<root>
+  <Configs>
+    <DBConnection Name="avidb" Type="mysql"
+                  ConnectionString="server=127.0.0.1;Port=3306; user=root; password=123456;database=avidb;SSLMODE=NONE;" />
+	<!--<DBConnection Name="avidb" Type="mysql"
+                  ConnectionString="server=127.0.0.1;Port=3306; user=sa; password=admin!01;database=avidb;SSLMODE=NONE;" />-->
+  </Configs>
+
+  <Resources>
+    <!--定义资源模板-->
+    <ResourceTemplates>
+      <!--Agv通用动作模板-->
+      <ResourceTemplate Name="AVIStationPointer" TargetResourceType="Machine">
+        <Actions>
+
+        <!--过点信息记录Process-->
+		<!--读取过点信息-->
+         <Action Type="TagsAction" Name="ReadPassMessage">
+		    <OutParameter Name="PassMessage" Type="string" />
+		    <OutParameter Name="RecordTrigNumber" Type="int16" />
+		    <OutParameter Name="OperateMode" Type="int16" />
+            <OutParameter Name="Source" Type="int16" />
+            <OutParameter Name="Destination" Type="int16" />
+
+            <ActionItem Type="ReadTag" Tag="RFIDTagData" OutParameter="PassMessage" />
+		    <ActionItem Type="ReadTag" Tag="SkidPassTrig" OutParameter="RecordTrigNumber" />
+		    <ActionItem Type="ReadTag" Tag="OperateMode" OutParameter="OperateMode" />
+		    <ActionItem Type="ReadTag" Tag="Source" OutParameter="Source" />
+		    <ActionItem Type="ReadTag" Tag="Destination" OutParameter="Destination" />
+          </Action>
+
+          <!--写入过点信息处理结果-->
+          <Action Type="WriteAVIRecordSkidPassResult" Name="WriteAVIRecordSkidPassResult">
+			  <InParameter Name="RecordResult" Type="int16" />
+			  <InParameter Name="RecordId" Type="long" />
+          </Action>
+
+          <!--车身数据请求Process-->
+          <!--读取车身VIN码和橇信息-->
+         <Action Type="TagsAction" Name="ReadVINAndSkidInfo">
+		    <OutParameter Name="VIN" Type="string" />
+		    <OutParameter Name="SkidType" Type="string" />
+		    <OutParameter Name="SkidNum" Type="string" />
+			 <OutParameter Name="RfidTagData" Type="string" />
+
+		    <ActionItem Type="ReadTag" Tag="VIN" OutParameter="VIN" />
+		    <ActionItem Type="ReadTag" Tag="SkidType" OutParameter="SkidType" />
+			<ActionItem Type="ReadTag" Tag="SkidNum" OutParameter="SkidNum" />
+			<ActionItem Type="ReadTag" Tag="RFIDTagData" OutParameter="RfidTagData" />
+			 
+          </Action>
+
+          <!--写入车身信息-->
+          <Action Type="TagsAction" Name="WriteCarInfo">
+            <InParameter Name="RfidTagData" Type="string" />
+            <ActionItem Type="WriteTag" Tag="RFIDTagDataBack" InParameter="RfidTagData" />
+          </Action>
+
+		  <!--写入车身信息请求结果-->
+          <Action Type="TagsAction" Name="WriteAVIRequestCarInfoResult">
+            <InParameter Name="RequestResult" Type="int16" />
+            <ActionItem Type="WriteTag" Tag="RequestResult" InParameter="RequestResult" />
+          </Action>
+			
+			<!--记录过点信息并判断车体在AVI站点之间有没有超时滞留。-->
+			<Action Type="RecordSkidPassMessage" Name="RecordSkidPassMessage">
+				<InParameter Name="PassMessage" Type="string" />
+				<InParameter Name="RecordTrigNumber" Type="int16" />
+				<InParameter Name="OperateMode" Type="int16" />
+				<InParameter Name="Source" Type="int16" />
+				<InParameter Name="Destination" Type="int16" />
+
+				<OutParameter Name="UploadMessageJson" Type="string" />
+				<OutParameter Name="VIN" Type="string" />
+				<OutParameter Name="RecordResult" Type="int16" />
+				<OutParameter Name="RecordId" Type="long" />
+				<OutParameter Name="ShouldUpload" Type="bool" />
+			</Action>
+        </Actions>
+      </ResourceTemplate>
+    </ResourceTemplates>
+
+	  <!--&lt;!&ndash;PLC 081&ndash;&gt;
+	  <Resource Name="CS30" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="返修车身返回121-015" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.81.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 041&ndash;&gt;
+	  <Resource Name="CS35" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="Audit返回121-040" Type="S7LinkedDataSource" LinkedMachineName="CS30"
+						  LinkedDataSourceName="返修车身返回121-015" LinkedIp="10.206.81.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <Resource Name="HB01" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="1号立体库堆垛机" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.82.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;ResourceTemplate="AVIStationPointer"&ndash;&gt;
+	  <Resource Name="HB02" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="2号立体库堆垛机" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.83.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;ResourceTemplate="AVIStationPointer"&ndash;&gt;
+	  <Resource Name="HB03" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="3号立体库堆垛机" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.84.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;ResourceTemplate="AVIStationPointer"&ndash;&gt;
+      <Resource Name="HB04" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+        <DataSources>
+	       &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+            <DataSource Name="4号立体库堆垛机" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.85.11"  Rack="0" Slot="1"
+                    UpdateInterval="500">
+            <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+			<Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+			<Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+			<Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+			<Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+			<Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+			<Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+			<Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+			<Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+			<Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+			<Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+			<Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+        </DataSource>
+         </DataSources>
+      </Resource>
+
+	  <Resource Name="HB05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="5号立体库堆垛机" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.86.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>-->
+	  
+	  <!--PLC 041-->
+	  <Resource Name="ES05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			  <DataSource Name="电泳打磨前滚床041-005" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.41.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <!--PLC 041-->
+	  <Resource Name="UB05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			 <!-- <DataSource Name="电泳橇换PVC托盘041-055" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.41.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">-->
+			  <DataSource Name="电泳橇换PVC托盘041-055" Type="S7LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <!--PLC 041-->
+	  <Resource Name="UB10" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			  <DataSource Name="PVC前041-060" Type="S7LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">
+			  <!--<DataSource Name="PVC前041-055" Type="LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">-->
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <!--PLC 041-->
+	  <Resource Name="UB30" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			  <DataSource Name="PVC后041-090" Type="S7LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">
+			  <!--<DataSource Name="PVC后041-090" Type="LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">-->
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW750" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW752" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB754.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW960" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW962" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW964" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX968.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB970.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB972.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB976.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW994" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB750.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <!--PLC 041-->
+	  <Resource Name="UB35" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			  <DataSource Name="PVC换面漆041-145" Type="S7LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">
+			  <!--<DataSource Name="PVC换面漆041-145" Type="LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">-->
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW1000" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW1002" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB1004.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW1210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW1212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW1214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX1218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB1220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB1222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB1226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW1244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB1000.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <!--PLC 041-->
+	  <Resource Name="ES25" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			  <DataSource Name="电泳打磨旁下线口041-215" Type="S7LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">
+				  <!-- <DataSource Name="密封线后下线口041-215" Type="LinkedDataSource" LinkedMachineName="ES05"
+                               LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">-->
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW1250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW1252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB1254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW1460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW1462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW1464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX1468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB1470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB1472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB1476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW1494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB1250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  <!--PLC 041-->
+	  <Resource Name="SE45" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <!--AVI站点  S7DataSource  InternalDataSource-->
+			  <DataSource Name="密封线后下线口041-215" Type="S7LinkedDataSource" LinkedMachineName="ES05"
+						  LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW1500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW1502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB1504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW1710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW1712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW1714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX1718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB1720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB1722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB1726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW1744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB1500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+	  <!--&lt;!&ndash;PLC 011&ndash;&gt;
+	  <Resource Name="IN01" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="旧焊装出口011-355" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.91.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 011&ndash;&gt;
+	  <Resource Name="IN02" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="新焊装出口011-210" Type="S7LinkedDataSource" LinkedMachineName="IN01"
+						  LinkedDataSourceName="旧焊装出口011-355" LinkedIp="10.206.91.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 011&ndash;&gt;
+	  <Resource Name="BW05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="白车身橇换电泳橇011-225" Type="S7LinkedDataSource" LinkedMachineName="IN01"
+						  LinkedDataSourceName="旧焊装出口011-355" LinkedIp="10.206.91.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 011&ndash;&gt;
+	  <Resource Name="CS05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="电泳橇拆垛011-335" Type="S7LinkedDataSource" LinkedMachineName="IN01"
+						  LinkedDataSourceName="旧焊装出口011-355" LinkedIp="10.206.91.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW750" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW752" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB754.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW960" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW962" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW964" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX968.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB970.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB972.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB976.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW994" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB750.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	   &lt;!&ndash;PLC 091&ndash;&gt;
+	  <Resource Name="CS15" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="初检横运机091-050" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.21.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 091&ndash;&gt;
+	  <Resource Name="CS20" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="点修补和大返修处横运机091-105" Type="S7LinkedDataSource" LinkedMachineName="CS15"
+						  LinkedDataSourceName="初检横运机091-050" LinkedIp="10.206.21.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="WX25" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="车身提起面漆橇111-010" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.92.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="WX10" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="吊起车身上注蜡橇111-020" Type="S7LinkedDataSource" LinkedMachineName="WX25"
+						  LinkedDataSourceName="车身提起面漆橇111-010" LinkedIp="10.206.92.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="WX30" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="车身上注蜡挂具111-065" Type="S7LinkedDataSource" LinkedMachineName="WX25"
+						  LinkedDataSourceName="车身提起面漆橇111-010" LinkedIp="10.206.92.11" UpdateInterval="500">
+				  &lt;!&ndash;<DataSource Name="PVC前041-055" Type="LinkedDataSource" LinkedMachineName="ES05"
+                              LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">&ndash;&gt;
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="WX15" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="车身上注蜡橇111-105" Type="S7LinkedDataSource" LinkedMachineName="WX25"
+						  LinkedDataSourceName="车身提起面漆橇111-010" LinkedIp="10.206.92.11" UpdateInterval="500">
+				  &lt;!&ndash;<DataSource Name="PVC后041-090" Type="LinkedDataSource" LinkedMachineName="ES05"
+                              LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">&ndash;&gt;
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW750" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW752" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB754.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW960" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW962" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW964" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX968.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB970.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB972.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB976.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW994" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB750.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="WX20" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="注蜡换总装橇111-135_1" Type="S7LinkedDataSource" LinkedMachineName="WX25"
+						  LinkedDataSourceName="车身提起面漆橇111-010" LinkedIp="10.206.92.11" UpdateInterval="500">
+				  &lt;!&ndash;<DataSource Name="PVC换面漆041-145" Type="LinkedDataSource" LinkedMachineName="ES05"
+                              LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">&ndash;&gt;
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW1000" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW1002" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB1004.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW1210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW1212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW1214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX1218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB1220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB1222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB1226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW1244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB1000.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+-->
+	  <!--&lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="WX21" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="注蜡换总装橇111-135_2" Type="S7LinkedDataSource" LinkedMachineName="WX25"
+						  LinkedDataSourceName="车身提起面漆橇111-010" LinkedIp="10.206.92.11" UpdateInterval="500">
+				  &lt;!&ndash; <DataSource Name="密封线后下线口041-215" Type="LinkedDataSource" LinkedMachineName="ES05"
+                               LinkedDataSourceName="电泳打磨前滚床041-005" LinkedIp="10.206.41.11" UpdateInterval="500">&ndash;&gt;
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW1250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW1252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB1254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW1460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW1462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW1464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX1468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB1470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB1472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB1476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW1494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB1250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 111&ndash;&gt;
+	  <Resource Name="OU01" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="总装入口111-010" Type="S7LinkedDataSource" LinkedMachineName="WX25"
+						  LinkedDataSourceName="车身提起面漆橇111-010" LinkedIp="10.206.92.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW1500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW1502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB1504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW1710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW1712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW1714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX1718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB1720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB1722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB1726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW1744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB1500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>-->
+	  
+	 <!-- &lt;!&ndash;PLC 021&ndash;&gt;
+	  <Resource Name="BW25" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="前处理前021-030" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.71.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6050.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6050.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6050.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6050.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6050.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6050.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6050.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6050.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6050.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6050.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6050.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6051.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 021&ndash;&gt;
+	  <Resource Name="PT65" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="前处理前021-055" Type="S7LinkedDataSource" LinkedMachineName="BW25"
+						  LinkedDataSourceName="前处理前021-030" LinkedIp="10.206.71.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6050.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6050.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6050.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6050.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6050.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6050.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6050.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6050.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6050.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6050.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6050.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6051.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 021&ndash;&gt;
+	  <Resource Name="ED42" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="电泳前021-065" Type="S7LinkedDataSource" LinkedMachineName="BW25"
+						  LinkedDataSourceName="前处理前021-030" LinkedIp="10.206.71.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6050.DBW500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6050.DBW502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6050.DBB504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6050.DBW710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6050.DBW712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6050.DBW714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6050.DBX718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6050.DBB720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6050.DBB722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6050.DBB726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6050.DBW744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6051.DBB500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 021&ndash;&gt;
+	  <Resource Name="ED45" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="电泳后021-095" Type="S7LinkedDataSource" LinkedMachineName="BW25"
+						  LinkedDataSourceName="前处理前021-030" LinkedIp="10.206.71.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6050.DBW750" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6050.DBW752" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6050.DBB754.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6050.DBW960" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6050.DBW962" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6050.DBW964" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6050.DBX968.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6050.DBB970.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6050.DBB972.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6050.DBB976.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6050.DBW994" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6051.DBB750.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+
+	  &lt;!&ndash;PLC 071&ndash;&gt;
+	  <Resource Name="PS05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  &lt;!&ndash;AVI站点  S7DataSource  InternalDataSource&ndash;&gt;
+			  <DataSource Name="中涂打磨入口071-005" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.51.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 071&ndash;&gt;
+	  <Resource Name="PS45" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="Audit071-020" Type="S7LinkedDataSource" LinkedMachineName="PS05"
+						  LinkedDataSourceName="中涂打磨入口071-005" LinkedIp="10.206.51.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 071&ndash;&gt;
+	  <Resource Name="PS35" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="返修071-050" Type="S7LinkedDataSource" LinkedMachineName="PS05"
+						  LinkedDataSourceName="中涂打磨入口071-005" LinkedIp="10.206.51.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 071&ndash;&gt;
+	  <Resource Name="TC05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="中涂打磨入口071-140" Type="S7LinkedDataSource" LinkedMachineName="PS05"
+						  LinkedDataSourceName="中涂打磨入口071-005" LinkedIp="10.206.51.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW750" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW752" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB754.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW960" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW962" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW964" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX968.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB970.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB972.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB976.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW994" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB750.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 051&ndash;&gt;
+	  <Resource Name="CS10" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="中涂打磨入口051-040" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.52.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+	  
+	  &lt;!&ndash;PLC 081&ndash;&gt;
+	  <Resource Name="TC10" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="面漆入口081-005" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.64.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 081&ndash;&gt;
+	  <Resource Name="TC20" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="Audit071-020" Type="S7LinkedDataSource" LinkedMachineName="TC10"
+						  LinkedDataSourceName="面漆入口081-005" LinkedIp="10.206.64.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW250" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW252" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB254.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW460" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW462" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW464" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX468.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB470.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB472.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB476.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW494" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB250.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 081&ndash;&gt;
+	  <Resource Name="TC50" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="罩光071-050" Type="S7LinkedDataSource" LinkedMachineName="TC10"
+						  LinkedDataSourceName="面漆入口081-005" LinkedIp="10.206.64.11" UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW500" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW502" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB504.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW710" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW712" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW714" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX718.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB720.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB722.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB726.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW744" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB500.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 031&ndash;&gt;
+	  <Resource Name="ED55" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="电泳烘干前031-070" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.56.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>
+
+	  &lt;!&ndash;PLC 061&ndash;&gt;
+	  <Resource Name="PR05" Type="Machine" ResourceTemplate="AVIStationPointer" Enable="true">
+		  <DataSources>
+			  <DataSource Name="中途喷漆前061-025" Type="S7DataSource" CpuType="S71500" IPAddress="10.206.63.11"  Rack="0" Slot="1"
+						  UpdateInterval="500">
+				  <Tag Name="SkidPassTrig" Address="DB6000.DBW0" TagType="int16" />
+				  <Tag Name="OperateMode" Address="DB6000.DBW2" TagType="int16"/>
+				  <Tag Name="RFIDTagData" Address="DB6000.DBB4.206" TagType="bytearray" />
+				  <Tag Name="Source" Address="DB6000.DBW210" TagType="int16"/>
+				  <Tag Name="Destination" Address="DB6000.DBW212" TagType="int16"/>
+				  <Tag Name="RecordResult" Address="DB6000.DBW214" TagType="int16"/>
+
+				  <Tag Name="RequestCarInfoTrig" Address="DB6000.DBX218.0" TagType="bool"/>
+				  <Tag Name="SkidType" Address="DB6000.DBB220.2" TagType="bytearray" />
+				  <Tag Name="SkidNum" Address="DB6000.DBB222.4" TagType="bytearray"/>
+				  <Tag Name="VIN" Address="DB6000.DBB226.18" TagType="bytearray"/>
+				  <Tag Name="RequestResult" Address="DB6000.DBW244" TagType="int16"/>
+
+				  <Tag Name="RFIDTagDataBack" Address="DB6001.DBB0.206" TagType="bytearray" />
+			  </DataSource>
+		  </DataSources>
+	  </Resource>-->
+
+	  <Resource Type="AVICenter" Name="AVICenter" Enable="True">
+		<Actions>
+            <!--生成滑橇队列-->
+			<Action Type="GenerateSkidQueue" Name="GenerateSkidQueue">
+				<InParameter Name="ResourceDic" Type="string" GenericType="Dictionary"/>
+				<InParameter Name="VIN" Type="string" />
+				<InParameter Name="Destination" Type="int16" />
+			</Action>
+			<!--上传MOM系统过点信息-->
+			<Action Type="UploadSkidPassInfo" Name="UploadSkidPassInfo">
+				<InParameter Name="UploadMessageJson" Type="string"/>
+				<InParameter Name="RecordId" Type="long" />
+				
+				<OutParameter Name="RecordResult" Type="int16" />
+			</Action>
+
+            <!--车身数据请求-->
+			<Action Type="RequestCarInfo" Name="RequestCarInfo">
+				<InParameter Name="ResourceDic" Type="string" GenericType="Dictionary"/>
+				<InParameter Name="VIN" Type="string"/>
+				<InParameter Name="SkidType" Type="string" />
+				<InParameter Name="SkidNum" Type="string" />
+				<InParameter Name="RfidTagData" Type="string" />
+				
+				<OutParameter Name="RfidTagData" Type="string" />
+				<OutParameter Name="RequestResult" Type="int16" />
+			</Action>
+		</Actions>
+	</Resource>
+	  
+	  <Resource Name="PicsAviQueue" Type="AVIQueue" Enable="True">
+		  <Queue Name="OldBSInFeed" Description="旧焊装车间进车" />
+		  <Queue Name="NewBSInFeed" Description="新焊装车间进车" />
+		  <Queue Name="PicsEntry" Description="涂装入口" />
+		  <Queue Name="Pretreatment" Description="先处理" />
+		  <Queue Name="AfterPretreatment" Description="先处理后" />
+		  <!--5-->
+		  <Queue Name="EdCoating" Description="电泳" />
+		  <Queue Name="AfterEdCoating" Description="电泳后" />
+		  <Queue Name="EdOven" Description="电泳烘干" />
+		  <Queue Name="EdPolishing" Description="电泳打磨及离线点" />
+		  <Queue Name="PVC" Description="PVC" />
+		  <!--10-->
+		  <Queue Name="Sealing" Description="密封线" />
+		  <Queue Name="Primer" Description="中涂" />
+		  <Queue Name="TopCoating" Description="面漆" />
+		  <Queue Name="Glazing" Description="罩光" />
+		  <Queue Name="AuditAfterFinishing" Description="检查修饰线后的Audit" />
+		  <!--15-->
+		  <Queue Name="QualityCheck" Description="初检，终检" />
+		  <Queue Name="SpotRepair" Description="点修补" />
+		  <Queue Name="HeavyRepair" Description="大返修" />
+		  <Queue Name="SecondCoating" Description="套色" />
+		  <Queue Name="ReplaceablePart" Description="更换件" />
+		  <!--20-->
+		  <Queue Name="Wax" Description="喷蜡" />
+		  <Queue Name="Assembly" Description="总装" />
+		  <Queue Name="HB01" Description="1号立体库" />
+		  <Queue Name="HB02" Description="2号立体库" />
+		  <Queue Name="HB03" Description="3号立体库" />
+		  <!--25-->
+		  <Queue Name="HB04" Description="4号立体库" />
+		  <Queue Name="HB05" Description="5号立体库" />
+		  <Queue Name="Transfer9_3" Description="9.3m库间转移" />
+		  <Queue Name="Transfer17_5" Description="17.5m库间转移" />
+		  <Queue Name="HB01Offline" Description="1号库离线" />
+		  <!--30-->
+		  <Queue Name="PrimerPolishing" Description="中涂打磨" />
+		  <Queue Name="Finishing" Description="检查修饰" />
+
+
+		  <!--011-->
+		  <Switch Name="IN01">
+			  <Route Id="1" Queue="OldBSInFeed"/>
+		  </Switch>
+		  <Switch Name="IN02">
+			  <Route Id="1" Queue="NewBSInFeed"/>
+		  </Switch>
+		  <Switch Name="BW05">
+			  <Route Id="1" Queue="PicsEntry"/>
+		  </Switch>
+
+		  <!--021-->
+		  <Switch Name="BW25">
+			  <Route Id="1" Queue="Pretreatment"/>
+		  </Switch>
+		  <Switch Name="PT65">
+			  <Route Id="1" Queue="AfterPretreatment"/>
+		  </Switch>
+		  <Switch Name="ED42">
+			  <Route Id="1" Queue="EdCoating"/>
+		  </Switch>
+		  <Switch Name="ED45">
+			  <Route Id="1" Queue="AfterEdCoating"/>
+		  </Switch>
+
+		  <!--031-->
+		  <Switch Name="ED55">
+			  <Route Id="1" Queue="EdOven"/>
+		  </Switch>
+
+		  <!--041-->
+		  <Switch Name="ES05">
+			  <Route Id="1" Queue="EdPolishing"/>
+		  </Switch>
+		  <Switch Name="UB05">
+			  <Route Id="1" Queue="PVC"/>
+		  </Switch>
+		  <Switch Name="UB35">
+			  <Route Id="1" Queue="Sealing"/>
+		  </Switch>
+
+		  <!--061-->
+		  <Switch Name="PR05">
+			  <Route Id="1" Queue="Primer"/>
+		  </Switch>
+
+		  <!--081-->
+		  <Switch Name="TC20">
+			  <Route Id="1" Queue="TopCoating"/>
+		  </Switch>
+		  <Switch Name="TC50">
+			  <Route Id="1" Queue="Glazing"/>
+		  </Switch>
+
+		  <!--091-->
+		  <Switch Name="CS15">
+			  <Route Id="1" Queue="AuditAfterFinishing"/>
+			  <Route Id="2" Queue="QualityCheck"/>
+			  <Route Id="3" Queue="SpotRepair"/>
+			  <Route Id="4" Queue="HeavyRepair"/>
+			  <Route Id="5" Queue="SecondCoating"/>
+			  <Route Id="6" Queue="ReplaceablePart"/>
+		  </Switch>
+		  <Switch Name="CS20">
+			  <Route Id="1" Queue="AuditAfterFinishing"/>
+			  <Route Id="2" Queue="QualityCheck"/>
+			  <Route Id="3" Queue="SpotRepair"/>
+			  <Route Id="4" Queue="HeavyRepair"/>
+			  <Route Id="5" Queue="SecondCoating"/>
+			  <Route Id="6" Queue="ReplaceablePart"/>
+		  </Switch>
+
+		  <!--111-->
+		  <Switch Name="WX10">
+			  <Route Id="1" Queue="Wax"/>
+		  </Switch>
+		  <Switch Name="WX15">
+			  <Route Id="1" Queue="Assembly" IsTerminal="True"/>
+		  </Switch>
+
+		  <!--立体库-->
+		  <Switch Name="HB01">
+			  <Route Id="1" Queue="HB01"/>
+			  <Route Id="2" Queue="Transfer9_3"/>
+			  <Route Id="3" Queue="Transfer17_5"/>
+			  <Route Id="4" Queue="HB01Offline" IsTerminal="True"/>
+		  </Switch>
+		  <Switch Name="HB02">
+			  <Route Id="1" Queue="HB02"/>
+			  <Route Id="2" Queue="Transfer9_3"/>
+			  <Route Id="3" Queue="Transfer17_5"/>
+			  <Route Id="4" Queue="EdPolishing"/>
+		  </Switch>
+		  <Switch Name="HB03">
+			  <Route Id="1" Queue="HB03"/>
+			  <Route Id="2" Queue="Transfer9_3"/>
+			  <Route Id="3" Queue="Transfer17_5"/>
+			  <Route Id="4" Queue="PrimerPolishing"/>
+		  </Switch>
+		  <Switch Name="HB04">
+			  <Route Id="1" Queue="HB04"/>
+			  <Route Id="2" Queue="Transfer9_3"/>
+			  <Route Id="3" Queue="Transfer17_5"/>
+		  </Switch>
+		  <Switch Name="HB05">
+			  <Route Id="1" Queue="HB05"/>
+			  <Route Id="2" Queue="Transfer9_3"/>
+			  <Route Id="3" Queue="Transfer17_5"/>
+			  <Route Id="4" Queue="Finishing"/>
+		  </Switch>
+	  </Resource>
+  </Resources>
+</root>

@@ -1,0 +1,16 @@
+﻿<root>
+<Configs>
+	<Redundancy Enable="true"/>
+	  	<!--<DBConnection Name="SAICDatabase" Type="Sqlserver" ConnectionString="server=.;database=SAIC;uid=sa;pwd=Pass1234;pooling=true;min pool size=70;max pool size=300;"/>
+				  	<DBConnection Name="SAICDatabase" Type="Sqlserver" ConnectionString="Data Source=jiansun;Initial Catalog=SAIC;Integrated Security=True"/>
+						<DBConnection Name="SAICDatabase" Type="Sqlserver" ConnectionString="server=.;database=SAIC;uid=sa;pwd=Pass1234;pooling=true;min pool size=70;max pool size=300;"/>-->
+
+		<DBConnection Name="SAICDatabase" Type="Sqlserver" ConnectionString="Data Source=jiansun;Initial Catalog=SAICND;Integrated Security=True;pooling=true;min pool size=70;max pool size=300;"/>
+		<DBConnection Name="SAICPMCDatabase" Type="Sqlserver" ConnectionString="server=10.110.9.81;database=SAIC;uid=sa;pwd=Pass1234;"/>		
+	</Configs>
+<Resources>
+	
+   
+</Resources>
+</root>
+

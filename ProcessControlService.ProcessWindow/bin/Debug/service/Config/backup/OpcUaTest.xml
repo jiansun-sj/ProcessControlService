@@ -1,0 +1,25 @@
+﻿<root>
+	<Configs>
+	</Configs>
+	<Resources>
+		<Resource Type="Machine" Name="OpcUaMachine" Enable="true">
+			<DataSources>
+
+				<DataSource Type="OpcUaDataSource" Name="OpcUaGroup" ServerUrl="opc.tcp://127.0.0.1:62547/DataAccessServer" UserName="user1" Password="password" UpdateInterval="1000">
+					<Tag Name="TestInt" Address="ns=2;s=Machines/Machine A/TestValueInt" TagType="int32" />
+					<Tag Name="TestFloat" Address="ns=2;s=Machines/Machine A/TestValueFloat" TagType="float" />
+					<Tag Name="TestString" Address="ns=2;s=Machines/Machine A/Name" TagType="string" />
+				</DataSource>
+
+				<DataSource Type="OpcUaDataSource" Name="KepOpcUaGroup" ServerUrl="opc.tcp://127.0.0.1:49320" UserName="user1" Password="123456" UpdateInterval="1000">
+					<Tag Name="TestInt" Address="ns=2;s=_System._Time_Hour" TagType="uint" />
+					<Tag Name="Testdouble" Address="i=2272" TagType="double" />
+					<Tag Name="TestString" Address="ns=2;s=_System._ProductName" TagType="string" />
+					<Tag Name="TestBool" Address="ns=2;s=通道 1.设备 1.tg1" TagType="bool" />
+				</DataSource>
+			</DataSources>
+		</Resource>
+
+	</Resources>
+</root>
+

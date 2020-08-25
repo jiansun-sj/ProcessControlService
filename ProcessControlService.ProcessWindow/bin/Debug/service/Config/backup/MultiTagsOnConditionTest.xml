@@ -1,0 +1,159 @@
+<root>
+  <Configs>
+  </Configs>
+
+  <Resources>
+    <Resource Type="Machine" Name="TestMachine1"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+		</DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine2"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine3"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine4"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine5"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine6"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine7"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine8"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine9"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine10"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine11"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine12"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine13"  Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Name="TrigTag" TagType="bool" AccessType="ReadWrite"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Process" Name="MainProcess" Enable="true" LogOutput="true" AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="AviStation" />
+          <Item Key="Locker" />
+        </ProcessParameter>
+        <ProcessParameter Name="TrigStation" Type="string"/>
+        <ProcessParameter Name="CallingTag" Type="string"/>
+      </ProcessParameters>
+
+      <Condition Type="MultiTagsOnCondition" Name="ConditionName" Container="MachineName" Tag="TagName">
+        <TrigTags>
+          <TrigTag Machine="TestMachine1" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine2" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine3" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine4" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine5" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine6" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine7" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine8" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine9" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine10" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine11" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine12" Tag="TrigTag"/>
+          <TrigTag Machine="TestMachine13" Tag="TrigTag"/>
+        </TrigTags>
+        <OutParameter MachineName="TrigStation" TagName="CallingTag"/>
+      </Condition>
+      
+      <Steps>
+        <!--分配Agv-->
+        <Step Index="1" Name="配置AVI站点资源" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="ConfigResourceDicAction">
+            <InParameter ActionParameter="Key" ConstValue="AviStation"/>
+            <InParameter ActionParameter="Value" ProcessParameter="TrigStation"/>
+            <InParameter ActionParameter="InDictionaryParameter" ProcessParameter="ResourceDic"/>
+            <OutParameter ActionParameter="OutDictionaryParameter" ProcessParameter="ResourceDic"/>
+
+            <ShowParameter ProcessParameter="TrigStation" />
+          </StepAction>
+          
+          
+        </Step>
+        
+      </Steps>
+    </Resource>
+  
+  </Resources>
+</root>

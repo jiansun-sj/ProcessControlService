@@ -1,0 +1,225 @@
+<root>
+  <Configs>
+  </Configs>
+
+  <CustomizedTypes>
+    <CustomType Type="ProductType" Name="TestProduct" Enable="true">
+      <Features>
+        <Feature Name="Width" Type="int16"/>
+        <Feature Name="Length" Type="int16"/>
+        <Feature Name="Height" Type="int16"/>
+        <Feature Name="ColorCode" Type="int16"/>
+        <Feature Name="OrderNumber" Type="int16"/>
+      </Features>
+    </CustomType>
+  </CustomizedTypes>
+  
+  <Resources>
+    <Resource Type="LineQueueManager" GenericType="Product" Name="LineQueueCollection" Enable="true">
+      <Queue Name="DistributeQueue"/>
+      <Queue Name="QueueA"/>
+      <Queue Name="QueueB"/>
+      <Queue Name="QueueC"/>
+
+      <Switch Name="MachineA">
+        <Route Id="1" Queue="QueueA"/>
+      </Switch>
+      <Switch Name="MachineB">
+        <Route Id="1" Queue="QueueB"/>
+      </Switch>
+      <Switch Name="MachineC">
+        <Route Id="1" Queue="QueueC" IsTerminal="true"/>
+      </Switch>
+      
+    </Resource>
+    
+    <ResourceTemplates>
+      <ResourceTemplate Name="MachinePointer1" TargetResourceType="Machine">
+        <Actions>
+          <Action Type="TagsAction" Name="GetAccumulate">
+            <OutParameter Name="Accumulate1" Type="Int16" />
+            <ActionItem Type="ReadTag" Tag="AccumulateTag" OutParameter="Accumulate1" />
+          </Action>
+          <Action Type="TagsAction" Name="SetAccumulate">
+            <InParameter Name="Accumulate2" Type="Int16" />
+            <ActionItem Type="WriteTag" Tag="AccumulateTag" InParameter="Accumulate2" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+    </ResourceTemplates>
+
+    <Resource Type="Machine" Name="TestMachine1" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Type="Tag" Name="AccumulateTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+          <Tag Type="Tag" Name="BreakTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+          <Tag Type="Tag" Name="TestTag" TagType="int16" AccessType="Read" DefaultValue="5" />
+		</DataSource>
+      </DataSources>
+       
+	   <Actions>
+          <Action Type="TagsAction" Name="GetAccumulate2">
+            <OutParameter Name="TestTag" Type="Int16" />
+            <ActionItem Type="ReadTag" Tag="TestTag" OutParameter="TestTag"/>
+          </Action>
+        </Actions>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine2" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory2" UpdateInterval="1000">
+          <Tag Type="Tag" Name="AccumulateTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+          <Tag Type="Tag" Name="BreakTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine3" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory3" UpdateInterval="1000">
+          <Tag Type="Tag" Name="AccumulateTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+          <Tag Type="Tag" Name="BreakTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestMachine4" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory3" UpdateInterval="1000">
+          <Tag Type="Tag" Name="AccumulateTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+          <Tag Type="Tag" Name="BreakTag" TagType="int16" AccessType="Write" DefaultValue="0" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Machine" Name="TestCallingMachine" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="虚拟工位呼叫数据源" UpdateInterval="1000">
+          <Tag Type="Tag" Name="CallingTag" TagType="int16" AccessType="ReadWrite" DefaultValue="0" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="Process" Name="MainProcess" Enable="true" LogOutput="true" AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="false">
+      <Condition Type="TimerCondition" Name="触发条件1" Interval_0.1s="5" Init="True" />
+      <!-- TimerCondition InitializeCondition   <Condition Type = "SingleTagChangeCondition" Name="工位呼叫" Container="TestCallingMachine" Tag="CallingTag"/>-->
+      <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="MachineA" />
+          <Item Key="Locker" />
+        </ProcessParameter>
+        <ProcessParameter Name="MachineList" Type="string" GenericType="List">
+          <Item Value="TestMachine1" />
+          <Item Value="TestMachine2" />
+        </ProcessParameter>
+        <ProcessParameter Name="IsReachLimit" Type="bool"/>
+      </ProcessParameters>
+
+      <Steps>
+        <Step Index="1" Name="判断SubProcess同时执行此时" Wait="5" NextStepIndex="2">
+          <StepAction Container="Common" Action="LimitCurrentProcessInstanceNumber">
+            <InParameter ActionParameter="ProcessName" ConstValue="SubProcess" />
+            <InParameter ActionParameter="LimitNumber" ConstValue="10" />
+            <OutParameter ActionParameter="IsReachLimit" ProcessParameter="IsReachLimit" />
+          </StepAction>
+          <StepChecks>
+            <StepCheck ProcessParameter="IsReachLimit" ConstValue="true" NextStepIndex="-1" />
+            <StepCheck ProcessParameter="IsReachLimit" ConstValue="false" NextStepIndex="2" />
+          </StepChecks>
+        </Step>
+
+        <Step Index="2" Name="选择资源名" Wait="5" NextStepIndex="3">
+          <StepAction Container="Common" Action="SelectNextParameterItemFromArrayAction">
+            <InParameter ActionParameter="ListName" ProcessParameter="MachineList" />
+            <OutParameter ActionParameter="ResultItem" ProcessParameter="ResourceDic" />
+            <!--可以这样绑定，ActionParameter为一个BasicValue，ProcessParameter-->
+            <!--<ShowParameter ProcessParameter="MachineList" />-->
+            <ShowParameter ProcessParameter="ResourceDic" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="调用子过程" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="SubProcess" />
+            <!--Process执行时使用的字典型参数。-->
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="ResourceDic" />
+            <!--指定子程序执行StepAction的资源。CallProcessAction中将会获得本流程中决策出的子流程使用资源，
+            并将其赋值给子流程指定的字典型参数，子流程字典型参数名称可以和主流程不一致。但是参数类型需要一致-->
+            <InParameter ActionParameter="SubProcessResources" ConstValue="ResourceDic" />
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+
+    <Resource Type="Process" Name="SubProcess" Enable="true" LogOutput="true" AllowAsync="true" IsProcessRecord="false"
+              NeedDataSync="True">
+      <!--<Condition Type="TimerCondition" Name="触发条件1" Interval_0.1s="30" Init="True" />-->
+      <!--<BreakCondition Type="SingleTagChangeCondition" Name="BreakCondition" Container="{Using Test, Key=MachineA}" Tag="BreakTag"/>-->
+      <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="MachineA" Value="TestMachine1" />
+          <Item Key="Locker" />
+        </ProcessParameter>
+        <ProcessParameter Name="ProcessPar1" Type="int16" DefaultValue="0" />
+        <ProcessParameter Name="ProcessPar2" Type="int16" DefaultValue="1" />
+        <ProcessParameter Name="ProcessPar3" Type="int16" DefaultValue="0" />
+		<ProcessParameter Name="ProcessPar4" Type="int16" DefaultValue="0" />
+		<ProcessParameter Name="ProcessPar5" Type="ProductType"/>
+      </ProcessParameters>
+
+      <Lockers>
+        <Locker EntryLockerStep="1" ExitLockerStep="5" LockerKey="Locker"/>
+      </Lockers> 
+
+      <Steps>
+        <Step Index="1" Name="获取Accumulate" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using MachinePointer1, Binding {ResourceDic, Key=MachineA}}"
+                      Action="GetAccumulate">
+            <OutParameter ProcessParameter="ProcessPar1" ActionParameter="Accumulate1" />
+            <ShowParameter ProcessParameter="ProcessPar1" />
+          </StepAction>
+        </Step>
+		<Step Index="2" Name="等待1" Wait="10000" NextStepIndex="3">
+          <StepAction Container="Common"
+                      Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="500" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="递增" Wait="5" NextStepIndex="4">
+          <StepAction Container="Common" Action="TwoParameterCalculateAction">
+            <InParameter ProcessParameter="ProcessPar1" ActionParameter="ActionParameter1" />
+            <InParameter ProcessParameter="ProcessPar2" ActionParameter="ActionParameter2" />
+            <InParameter ActionParameter="CalculateType" ConstValue="Add" />
+            <OutParameter ProcessParameter="ProcessPar3" ActionParameter="ResultParameter" />
+            <ShowParameter ProcessParameter="ProcessPar3" />
+          </StepAction>
+        </Step>
+		<Step Index="4" Name="等待2" Wait="10000" NextStepIndex="5">
+          <StepAction Container="Common"
+                      Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="1000" />
+          </StepAction>
+        </Step>
+        <Step Index="5" Name="设置Accumulate" Wait="5" NextStepIndex="6">
+          <StepAction Container="{Using MachinePointer1, Binding {ResourceDic, Key=MachineA}}"
+                      Action="SetAccumulate">
+            <InParameter ProcessParameter="ProcessPar3" ActionParameter="Accumulate2" />
+          </StepAction>
+        </Step>
+        <Step Index="6" Name="等待3" Wait="10000" NextStepIndex="7">
+          <StepAction Container="Common"
+                      Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="1500" />
+          </StepAction>
+        </Step>
+        <Step Index="7" Name="读取3" Wait="10000" NextStepIndex="-1">
+          <StepAction Container="TestMachine1"
+                      Action="GetAccumulate2">
+            <OutParameter ProcessParameter="ProcessPar4" ActionParameter="TestTag" />
+            <ShowParameter ProcessParameter="ProcessPar4" />
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+  </Resources>
+</root>

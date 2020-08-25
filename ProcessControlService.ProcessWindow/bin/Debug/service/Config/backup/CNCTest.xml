@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+<Configs>
+</Configs>
+<Resources>
+  <Resource Type="Machine" Name="testMachine"  Enable="true">
+	<DataSources>
+		<DataSource Type="FanucCNCDataSource" Name="FanucCNCGroup" IPAddress="192.168.1.1" UpdateInterval="1000">
+			<Tag Name="Count" Address="P6712" TagType="int16" DefaultValue="" AccessType="Read"/>
+			<Tag Name="ProgramNumber" Address="M901" TagType="int16" AccessType="Write"/>
+			<Tag Name="NotChangeType" Address="M902" TagType="int16" AccessType="Write"/>
+			<Tag Name="ChangeType" Address="M903" TagType="int16" AccessType="Write"/>
+			<Tag Name="CNCAlarm" Address="A40.7" TagType="bool" AccessType="Read"/>
+			<Tag Name="TrayA" Address="M1001.0" TagType="bool" AccessType="Read"/>
+			<Tag Name="TrayB" Address="M1000.0" TagType="bool" AccessType="Read"/>
+		</DataSource>
+	
+		<DataSource Type="InternalDataSource" Name="InternalGroup">
+			<!-- <Tag Name="Reset" Address="IC0" TagType="bool" AccessType="Read"/>
+			<Tag Name="InPosition" Address="IC1" TagType="bool" DefaultValue="" AccessType="Read"/>
+			<Tag Name="Clamp" Address="WC0" TagType="bool" />
+			<Tag Name="Blow" Address="WC1" TagType="bool" />
+			<Tag Name="ClampF" Address="WC2" TagType="bool" />
+			<Tag Name="Count" Address="P6712" TagType="int16" DefaultValue="" AccessType="Read"/>
+			<Tag Name="ProgramNumber" Address="M901" TagType="int16" AccessType="Write"/>
+			<Tag Name="NotChangeType" Address="M902" TagType="int16" AccessType="Write"/>
+			<Tag Name="ChangeType" Address="M903" TagType="int16" AccessType="Write"/>
+			<Tag Name="CNCAlarm" Address="A40.7" TagType="bool" AccessType="Read"/>
+			<Tag Name="TrayA" Address="M1001.0" TagType="bool" AccessType="Read"/>
+			<Tag Name="TrayB" Address="M1000.0" TagType="bool" AccessType="Read"/> -->
+			<!--MDT共享文件夹信息-->
+			<Tag Name="shareIP"  TagType="string" DefaultValue="10.54.12.37"/>
+			<Tag Name="shareUser"  TagType="string" DefaultValue="SYS9bh"/>
+			<Tag Name="sharePW"  TagType="string" DefaultValue="rbcnlds"/>
+			<!--CNC程序共享文件夹信息-->
+			<Tag Name="shareProgramIP"  TagType="string" DefaultValue="10.54.12.37"/>
+			<Tag Name="shareProgramUser"  TagType="string" DefaultValue="SYS9bh"/>
+			<Tag Name="shareProgramPW"  TagType="string" DefaultValue="rbcnlds"/>
+			<!--MDT共享文件夹名称-->
+			<Tag Name="sharetheFolder"  TagType="string" DefaultValue="\\10.54.12.37\mdt\"/>
+			<Tag Name="sharefielpath"  TagType="string" DefaultValue="newMDTTest\"/>
+			<!-- <Tag Name="shareRDYfielpath"  TagType="string" DefaultValue="\\10.54.12.37\mdt\newRDYTest\"/> -->
+			<Tag Name="shareRDYfielpath"  TagType="string" DefaultValue="E:\testrdy\"/>
+			<Tag Name="CNCIP"  TagType="string" DefaultValue="10.174.87.19"/>
+			<!--CNC程序共享文件夹名称-->
+			<Tag Name="shareProgramFolder"  TagType="string" DefaultValue="\\10.54.12.37\mdt\newCNCProg\"/>
+			<!-- <Tag Name="ProgramFullPath"  TagType="string" DefaultValue="C:\Users\Public\boschtest\"/>
+			<Tag Name="mdtFullPath"  TagType="string" DefaultValue="C:\Users\Public\boschtest\"/>
+			<Tag Name="rdyFilePath"  TagType="string" DefaultValue="C:\Users\Public\boschtest\"/> 
+			<Tag Name="TestQRCode"  TagType="string" DefaultValue="0"/> -->
+			<!--加工区类型-->
+			<Tag Name="LastType"  TagType="string" DefaultValue="0"/>
+			<Tag Name="CurrQRCode"  TagType="string" DefaultValue="0"/>
+			<Tag Name="CurrWorkQRCode"  TagType="string" DefaultValue="0"/>
+			<!--准备区类型-->
+			<Tag Name="CurrCount"  TagType="int16" DefaultValue="0"/>
+			<Tag Name="LastCurrType"  TagType="string" DefaultValue="0"/>
+			<!--报警-->
+			<Tag Name="AlarmProgramFail"  TagType="bool" />
+			<Tag Name="AlarmDistinguishFail"  TagType="bool" />
+			<Tag Name="AlarmNotFit"  TagType="bool" />
+			<Tag Name="AlarmChangeType"  TagType="bool" />
+			<Tag Name="ConfirmChangeType"  TagType="bool" />
+			<Tag Name="ModeCount"  TagType="int16" DefaultValue="0"/>
+			<Tag Name="LastModeCount"  TagType="int16" DefaultValue="0"/>
+			<!--准备区主程序-->
+			<Tag Name="Family"  TagType="string" DefaultValue="0"/>
+			<Tag Name="TempFamily"  TagType="string" DefaultValue="0"/>
+			<!--加工区主程序-->
+			<Tag Name="LastFamily"  TagType="string" DefaultValue="0"/>
+			<Tag Name="BlowTimems"  TagType="int32" DefaultValue="10000"/>
+			<Tag Name="password"  TagType="string" DefaultValue="123456"/>
+			<Tag Name="tempTrig"  TagType="bool" DefaultValue="true" AccessType="Read"/>
+		</DataSource>
+	</DataSources>
+
+  </Resource>
+</Resources>
+</root>
+
+  

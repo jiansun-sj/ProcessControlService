@@ -1,0 +1,19 @@
+<root>
+<Configs>
+
+</Configs>
+<Resources>
+	
+
+	<Resource Type="DBQuery" Name="DBQueryResource" Enable="true" NeedDataSync="True" >
+		
+	</Resource>
+
+	<!--<Resource Type="MEBResource" Name="MEBResource1" Enable="true" >
+		
+	</Resource> -->
+
+
+	
+ </Resources>
+ </root>

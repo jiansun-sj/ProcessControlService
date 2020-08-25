@@ -1,0 +1,223 @@
+<root>
+  <Configs>
+    
+  </Configs>
+
+  <CustomizedTypes>
+    <CustomType Type="ProductType" Name="TestProduct" Enable="true">
+      <Features>
+        <Feature Name="Width" Type="int32"/>
+        <Feature Name="Length" Type="int32"/>
+        <Feature Name="Height" Type="int32"/>
+        <Feature Name="ColorCode" Type="string"/>
+        <Feature Name="OrderNumber" Type="string"/>
+      </Features>
+    </CustomType>
+  </CustomizedTypes>
+
+  <Resources>
+    <Resource Name="LineQueueCollection" Type="LineQueueManager" GenericType="Product" Enable="true">
+      <Queue Name="DistributeQueue" Size="50"/>
+      <Queue Name="QueueA" Size="10"/>
+      <Queue Name="QueueB" Size="7"/>
+      <Queue Name="QueueC" Size="9"/>
+
+      <Switch Name="MachineA">
+        <Route Id="1" Queue="QueueA"/>
+      </Switch>
+      <Switch Name="MachineB">
+        <Route Id="1" Queue="QueueB"/>
+      </Switch>
+      <Switch Name="MachineC">
+        <Route Id="1" Queue="QueueC" IsTerminal="true"/>
+      </Switch>
+    </Resource>
+
+    <ResourceTemplates>
+      <ResourceTemplate Name="MachinePointer1" TargetResourceType="Machine">
+        <Actions>
+          <Action Type="RequestCarFromQueueAction" Name="RequestCarFromQueue">
+            <OutParameter Name="CarVin" Type="string" />
+            <OutParameter Name="CarProduct" Type="Product" />
+          </Action>
+          
+          <Action Type="TagsAction" Name="WriteCarInfoIntoBuffer">
+            <InParameter Name="CarVin" Type="string" />
+            <ActionItem Type="WriteTag" Tag="CarBuffer" InParameter="CarVin" />
+            <ActionItem Type="WriteTag" Tag="RequestTag" ConstValue="false" />
+          </Action>
+
+          <Action Type="AddCarIntoNewQueueAction" Name="AddCarIntoNewQueue">
+            <InParameter Name="CarProduct" Type="Product" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+    </ResourceTemplates>
+
+    <!--线首请求设备-->
+    <Resource Name="MachineA" Type="Machine" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+          <Tag Type="Tag" Name="RequestTag" TagType="bool" DefaultValue="false" />
+          <Tag Type="Tag" Name="CarBuffer" TagType="string" />
+          
+          <Tag Type="Tag" Name="RequestQueue" TagType="string" DefaultValue="DistributeQueue"/>
+          <Tag Type="Tag" Name="CurrentQueue" TagType="string" DefaultValue="QueueA" />
+          <Tag Type="Tag" Name="PreviousMachine" TagType="string" DefaultValue="Null" />
+
+          <Tag Type="Tag" Name="Destination" TagType="int16" DefaultValue="1"/>
+          <Tag Type="Tag" Name="StationCount" TagType="int16"  DefaultValue="10"/>
+          <Tag Type="Tag" Name="IsTail" TagType="bool"  DefaultValue="false"/>
+
+
+          <Tag Type="Tag" Name="Station1" TagType="string" />
+          <Tag Type="Tag" Name="Station2" TagType="string" />
+          <Tag Type="Tag" Name="Station3" TagType="string" />
+          <Tag Type="Tag" Name="Station4" TagType="string" />
+          <Tag Type="Tag" Name="Station5" TagType="string" />
+          <Tag Type="Tag" Name="Station6" TagType="string" />
+          <Tag Type="Tag" Name="Station7" TagType="string" />
+          <Tag Type="Tag" Name="Station8" TagType="string" />
+          <Tag Type="Tag" Name="Station9" TagType="string" />
+          <Tag Type="Tag" Name="Station10" TagType="string" />
+		</DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MachineB" Type="Machine" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory2" UpdateInterval="1000">
+          <Tag Type="Tag" Name="RequestTag" TagType="bool" DefaultValue="false" />
+          <Tag Type="Tag" Name="CarBuffer" TagType="string" />
+          
+          <Tag Type="Tag" Name="RequestQueue" TagType="string" DefaultValue="QueueA"/>
+          <Tag Type="Tag" Name="CurrentQueue" TagType="string" DefaultValue="QueueB" />
+          <Tag Type="Tag" Name="PreviousMachine" TagType="string" DefaultValue="MachineA" />
+
+          <Tag Type="Tag" Name="Destination" TagType="int16" DefaultValue="1"/>
+          <Tag Type="Tag" Name="StationCount" TagType="int16"  DefaultValue="7"/>
+          <Tag Type="Tag" Name="IsTail" TagType="bool"  DefaultValue="false"/>
+
+          <Tag Type="Tag" Name="Station1" TagType="string" />
+          <Tag Type="Tag" Name="Station2" TagType="string" />
+          <Tag Type="Tag" Name="Station3" TagType="string" />
+          <Tag Type="Tag" Name="Station4" TagType="string" />
+          <Tag Type="Tag" Name="Station5" TagType="string" />
+          <Tag Type="Tag" Name="Station6" TagType="string" />
+          <Tag Type="Tag" Name="Station7" TagType="string" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MachineC" Type="Machine" ResourceTemplate="MachinePointer1" Enable="true">
+      <DataSources>
+        <DataSource Type="InternalDataSource" Name="MyMemory3" UpdateInterval="1000">
+          <Tag Type="Tag" Name="RequestTag" TagType="bool" DefaultValue="false" />
+          <Tag Type="Tag" Name="CarBuffer" TagType="string" />
+          
+          <Tag Type="Tag" Name="RequestQueue" TagType="string" DefaultValue="QueueB"/>
+          <Tag Type="Tag" Name="CurrentQueue" TagType="string" DefaultValue="QueueC" />
+          <Tag Type="Tag" Name="PreviousMachine" TagType="string" DefaultValue="MachineB" />
+
+          <Tag Type="Tag" Name="Destination" TagType="int16" DefaultValue="1"/>
+          <Tag Type="Tag" Name="StationCount" TagType="int16"  DefaultValue="9"/>
+          <Tag Type="Tag" Name="IsTail" TagType="bool"  DefaultValue="true"/>
+
+          <Tag Type="Tag" Name="Station1" TagType="string" />
+          <Tag Type="Tag" Name="Station2" TagType="string" />
+          <Tag Type="Tag" Name="Station3" TagType="string" />
+          <Tag Type="Tag" Name="Station4" TagType="string" />
+          <Tag Type="Tag" Name="Station5" TagType="string" />
+          <Tag Type="Tag" Name="Station6" TagType="string" />
+          <Tag Type="Tag" Name="Station7" TagType="string" />
+          <Tag Type="Tag" Name="Station8" TagType="string" />
+          <Tag Type="Tag" Name="Station9" TagType="string" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+    
+    <Resource Type="AviDemo" Name="AviDemo" Enable="true">
+     
+    </Resource>
+
+    <Resource Type="Process" Name="AviRequestQueueMainProcess" Enable="true" LogOutput="true" AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      
+      <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="AviStation"/>
+        </ProcessParameter>
+        <ProcessParameter Name="TrigStation" Type="string"/>
+        <ProcessParameter Name="CallingTag" Type="string"/>
+      </ProcessParameters>
+
+      <Condition Type="MultiTagsOnCondition" Name="ConditionName" Container="MachineName" Tag="TagName">
+        <TrigTags>
+          <!--立体库-->
+          <TrigTag Machine="MachineA" Tag="RequestTag"/>
+          <TrigTag Machine="MachineB" Tag="RequestTag"/>
+          <TrigTag Machine="MachineC" Tag="RequestTag"/>
+        </TrigTags>
+        <OutParameter MachineName="TrigStation" TagName="CallingTag"/>
+      </Condition>
+      <Steps>
+        <!--分配Agv-->
+        <Step Index="1" Name="配置AVI站点资源" Wait="5" NextStepIndex="2">
+          <StepAction Container="Common" Action="ConfigResourceDicAction">
+            <InParameter ActionParameter="Key" ConstValue="AviStation"/>
+            <InParameter ActionParameter="Value" ProcessParameter="TrigStation"/>
+            <InParameter ActionParameter="InDictionaryParameter" ProcessParameter="ResourceDic"/>
+            <OutParameter ActionParameter="OutDictionaryParameter" ProcessParameter="ResourceDic"/>
+          </StepAction>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="2" Name="调用AVI队列请求流程" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="AVIRequestQueue"/>
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="ResourceDic"/>
+            <InParameter ActionParameter="SubProcessResources" ConstValue="ResourceDic"/>
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+
+    <Resource Type="Process" Name="AVIRequestQueue" Enable="true" LogOutput="true" AllowAsync="true" IsProcessRecord="false"
+              NeedDataSync="True">
+      
+      <ProcessParameters>
+        <ProcessParameter Name="ResourceDic" Type="string" GenericType="Dictionary">
+          <Item Key="AviStation" />
+        </ProcessParameter>
+        <ProcessParameter Name="CarVin" Type="string" />
+        <ProcessParameter Name="CarProduct" Type="Product"/>
+        
+        <ProcessParameter Name="ProcessPar3" Type="int16" DefaultValue="0" />
+		<ProcessParameter Name="ProcessPar4" Type="int16" DefaultValue="0" />
+		<ProcessParameter Name="ProcessPar5" Type="ProductType"/>
+      </ProcessParameters>
+
+      <Steps>
+        <Step Index="1" Name="请求队列中车体" Wait="100000" NextStepIndex="2">
+          <StepAction Container="{Using MachinePointer1, Binding {ResourceDic, Key=AviStation}}"
+                      Action="RequestCarFromQueue">
+            <OutParameter ProcessParameter="CarVin" ActionParameter="CarVin" />
+            <OutParameter ProcessParameter="CarProduct" ActionParameter="CarProduct" />
+
+          </StepAction>
+        </Step>
+		<Step Index="2" Name="将车体信息写入PLC缓存区" Wait="100" NextStepIndex="3">
+          <StepAction Container="{Using MachinePointer1, Binding {ResourceDic, Key=AviStation}}"
+                      Action="WriteCarInfoIntoBuffer">
+            <InParameter ProcessParameter="CarVin" ActionParameter="CarVin"/>
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="将车体加入到新队列" Wait="100000" NextStepIndex="-1">
+          <StepAction Container="{Using MachinePointer1, Binding {ResourceDic, Key=AviStation}}"
+                      Action="AddCarIntoNewQueue">
+            <InParameter ProcessParameter="CarProduct" ActionParameter="CarProduct"/>
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+  </Resources>
+</root>

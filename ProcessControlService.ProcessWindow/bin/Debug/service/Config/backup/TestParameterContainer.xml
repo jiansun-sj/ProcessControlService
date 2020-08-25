@@ -1,0 +1,149 @@
+<root>
+<Configs>
+	<!-- <Database ConnectionString="Database='mydb';Data Source='localhost';User Id='root';Password='Yumpoo888';port=3306;charset='utf8';pooling=true"/> -->
+</Configs>
+<Resources>
+	<Resource Type="Machine" Name="TestMachine1" Enable="false" >
+		<DataSources>
+			<DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+				<Tag Type="Tag" Name="Signal1" TagType="bool" DefaultValue="false" />
+				<Tag Type="Tag" Name="Level1" TagType="float" DefaultValue="0.0" />
+				<Tag Type="Tag" Name="D1" TagType="int16" DefaultValue="12" />
+				<Tag Type="Tag" Name="D2" TagType="int16" DefaultValue="23" />
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="GetD1">
+				<OutParameter Name="Result" Type="Int16" />
+				<ActionItem Type="ReadTag" Tag="D1" OutParameter="Result" />
+			</Action>
+			<Action Type="TagsAction" Name="WriteD1">
+				<InParameter Name="Value" Type="Int16" />
+				<ActionItem Type="WriteTag" Tag="D1" InParameter="Value" />
+			</Action>
+		</Actions>
+	</Resource>
+	<Resource Type="Machine" Name="TestMachine2" Enable="false" >
+		<DataSources>
+			<DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+				<Tag Type="Tag" Name="Signal1" TagType="bool" DefaultValue="false" />
+				<Tag Type="Tag" Name="Level1" TagType="float" DefaultValue="0.0" />
+				<Tag Type="Tag" Name="D1" TagType="int16" DefaultValue="12" />
+				<Tag Type="Tag" Name="D2" TagType="int16" DefaultValue="23" />
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="GetD1">
+				<OutParameter Name="Result" Type="Int16" />
+				<ActionItem Type="ReadTag" Tag="D1" OutParameter="Result" />
+			</Action>
+			<Action Type="TagsAction" Name="WriteD1">
+				<InParameter Name="Value" Type="Int16" />
+				<ActionItem Type="WriteTag" Tag="D1" InParameter="Value" />
+			</Action>
+		</Actions>
+	</Resource>
+	<Resource Type="Machine" Name="TestMachine3" Enable="false" >
+		<DataSources>
+			<DataSource Type="InternalDataSource" Name="MyMemory1" UpdateInterval="1000">
+				<Tag Type="Tag" Name="Signal1" TagType="bool" DefaultValue="false" />
+				<Tag Type="Tag" Name="Level1" TagType="float" DefaultValue="0.0" />
+				<Tag Type="Tag" Name="D1" TagType="int16" DefaultValue="12" />
+				<Tag Type="Tag" Name="D2" TagType="int16" DefaultValue="23" />
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="GetD1">
+				<OutParameter Name="Result" Type="Int16" />
+				<ActionItem Type="ReadTag" Tag="D1" OutParameter="Result" />
+			</Action>
+			<Action Type="TagsAction" Name="WriteD1">
+				<InParameter Name="Value" Type="Int16" />
+				<ActionItem Type="WriteTag" Tag="D1" InParameter="Value" />
+			</Action>
+		</Actions>
+	</Resource>
+	
+	<Resource Type="Process" Name="MainProcess" Enable="false" LogOutput="true" IsProcessRecord="false">
+		<Condition Type="TimerCondition" Name="触发条件1" Interval_0.1s="50" Init="True"/>
+		<ProcessParameters>
+		  <ProcessParameter Name="SelectedResourceName" Type="string" DefaultValue="TestMachine1"/>
+		  <ProcessParameterArray Name="AvailbleResources" Type="string">
+			<ProcessParameterArrayItem Value="TestMachine1"/>
+			<ProcessParameterArrayItem Value="TestMachine2"/>
+			<ProcessParameterArrayItem Value="TestMachine3"/>
+		  </ProcessParameterArray>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="选取资源名" Wait="5" NextStepIndex="2">
+				<StepAction Container="Common" Action="SelectProcessParameterFromArray">
+					<InParameter ActionParameter="ProcessParameterArray" ConstValue="AvailbleResources"/>
+					<InParameter ActionParameter="ResultParameter" ConstValue="SelectedResourceName"/>
+				</StepAction>
+			</Step>
+			<Step Index="1" Name="设置过程资源" Wait="5" NextStepIndex="2">
+				<StepAction Container="Common" Action="SetProcessParameter">
+					<InParameter ActionParameter="ProcessName" ConstValue="SubProcess"/>
+					<InParameter ActionParameter="ParameterName" ConstValue="InstanceResourceName"/>
+					<InParameter ActionParameter="ParameterValue" ProcessParameter="SelectedResourceName"/>
+				</StepAction>
+			</Step>
+			<Step Index="2" Name="调用过程" Wait="5" NextStepIndex="-1">
+				<StepAction Container="Common" Action="CallProcessAction">
+					<InParameter ActionParameter="ProcessName" ConstValue="SubProcess"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+	
+	<Resource Type="Process" Name="SubProcess" Enable="false" LogOutput="true" AllowAsync="True" IsProcessRecord="false">
+		<ResourceTemplates>
+			<ResourceTemplate Name="ResourcePointer1" TargetResourceType="Machine">
+		</ResourceTemplates>
+		<ProcessParameters>
+		  <ProcessParameter Name="InstanceResourceName" Type="string" DefaultValue=""/>
+		  <ProcessParameter Name="InPar2" Type="float" DefaultValue="2"/>
+		  <ProcessParameter Name="ProcessPar1" Type="Int16" DefaultValue="0"/>
+		  <ProcessParameter Name="ProcessPar2" Type="Int16" DefaultValue="1"/>
+		  <ProcessParameter Name="ProcessPar3" Type="Int16" DefaultValue="0"/>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="加载资源1" Wait="5" NextStepIndex="2">
+			  <StepAction Container="Common" Action="SetResource">
+					<InParameter ActionParameter="ResourceTemplate" ProcessParameter="InstanceResourceName"/>
+					<InParameter ActionParameter="ResourceName" ConstValue="TestMachine1"/>
+			  </StepAction>
+			</Step>
+			<Step Index="2" Name="获取Tag" Wait="5" NextStepIndex="3">
+			  <StepAction ResourceTemplate="ResourcePointer1" Action="GetD1">
+				<OutParameter ProcessParameter="ProcessPar1" ActionParameter="Result"/>
+				<ShowParameter ProcessParameter="ProcessPar1"/>
+			  </StepAction>
+			</Step>
+			<Step Index="3" Name="等待" Wait="5" NextStepIndex="4">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="1000"/>
+				</StepAction>
+			</Step>
+			<Step Index="4" Name="递增" Wait="5" NextStepIndex="5">
+				<StepAction Container="Common" Action="TwoParameterCalculateAction">
+					<InParameter ProcessParameter="ProcessPar1" ActionParameter="ActionParameter1"/>
+					<InParameter ProcessParameter="ProcessPar2" ActionParameter="ActionParameter2"/>
+					<InParameter ActionParameter="CalculateType" ConstValue="Add"/>
+					<OutParameter ProcessParameter="ProcessPar3" ActionParameter="ResultParameter"/>
+				</StepAction>
+			</Step>	
+			<Step Index="5" Name="等待" Wait="5" NextStepIndex="6">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="1000"/>
+				</StepAction>
+			</Step>
+			<Step Index="6" Name="设置Tag" Wait="5" NextStepIndex="-1">
+			  <StepAction Container="TestMachine1" Action="WriteD1">
+				<InParameter ProcessParameter="ProcessPar3" ActionParameter="Value"/>
+			  </StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+	</Resources>
+</root>

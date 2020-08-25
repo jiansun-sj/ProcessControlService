@@ -1,0 +1,10 @@
+<Configs>
+	<ResourceModule>
+			<!--<Resource Name="ProcessControlService.ProcessModel.dll" Path="" Enable="True"/> 
+	 <Resource Name="ProcessControlService.VehicleStorage.dll" Path="" Enable="True"/>
+		 <Resource Name="ProcessControlService.MEBActions.dll" Path="" Enable="True"/>  
+		 <Resource Name="WMSResource.dll" Path="" Enable="True"/>  -->
+        <Resource Name="AviDemo.Resource.dll" Path="" Enable="True"/>  
+	</ResourceModule>
+</Configs>
+

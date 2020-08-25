@@ -1,0 +1,156 @@
+<root>
+<Configs>
+	<!-- <Database ConnectionString="Database='mydb';Data Source='localhost';User Id='root';Password='Yumpoo888';port=3306;charset='utf8';pooling=true"/> -->
+</Configs>
+<Resources>
+	<Resource Type="Machine" Name="TestMachine1" Enable="True" >
+		<DataSources>
+			<DataSource Type="S7DataSource" Name="SIEMENS_PLC1" CpuType="S71200" IPAddress="192.168.11.155" Rack="0" Slot="1" UpdateInterval="500">
+				<Tag Name="testbool" Address="DB1.DBX0.0" TagType="bool" AccessType="ReadWrite"/>
+				<Tag Name="STAG" Address="DB1.DBW4" TagType="Int16" AccessType="ReadWrite"/>
+				<Tag Name="ConstTag" Address="DB1.DBW20" TagType="Int16" AccessType="ReadWrite"/>
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="WriteSTAG">
+				<InParameter Name="Value" Type="Int16" />
+				<ActionItem Type="WriteTag" Tag="STAG" InParameter="Value" />
+			</Action>
+			<Action Type="TagsAction" Name="GetConstTag">
+				<OutParameter Name="Result" Type="Int16" />
+				<ActionItem Type="ReadTag" Tag="ConstTag" OutParameter="Result" />
+			</Action>
+		</Actions>
+	</Resource>
+	<Resource Type="Machine" Name="TestMachine2" Enable="True" >
+		<DataSources>
+			<DataSource Type="AllenBradleyDataSource" Name="AB_PLC1" IPAddress="192.168.11.156" Port="44818" Slot="0" UpdateInterval="500">
+				<Tag Name="ABtestDint" Address="AP31_CARSTYLE" TagType="int16" AccessType="ReadWrite"/>
+				<Tag Name="ABtestBool" Address="CELL1ANYRBTAPPRTIPCHG" TagType="bool" AccessType="ReadWrite"/>
+			</DataSource>
+		</DataSources>
+		<Actions>
+			<Action Type="TagsAction" Name="GetABtestDint">
+				<OutParameter Name="Result" Type="Int16" />
+				<ActionItem Type="ReadTag" Tag="ABtestDint" OutParameter="Result" />
+			</Action>
+		</Actions>
+	</Resource>
+	
+	
+	<Resource Type="DataBinding" Name="TagToDbDataBinding_Equal" LinkType="TagToDB" Enable="true" >
+		<DBDestSelect DBTable="TestDBTable" DBField="testID" ConditionType="Equal" ConditionValueType="int16" ConditionValue="3" OperateType="Update"> 
+		   <DBConnection Type="Sqlserver" ConnectionString="server=192.168.11.18;database=ND01_GA;uid=sa;pwd=123456;"/>
+	    </DBDestSelect>
+		<BindingItems>
+			<BindingItem Machine="TestMachine1" Tag="STAG" DBField="testInt" DBFieldType="int16"/>
+            <BindingItem Machine="TestMachine1" Tag="testbool" DBField="testBool" DBFieldType="bool"/>
+		</BindingItems>
+	</Resource>
+	<!-- 定义执行数据捆绑的Process资源，数据捆绑执行顺序Equal=>Max=>Min -->
+	<Resource Type="Process" Name="TestDataBindingProcess" Enable="true" LogOutput="true" IsProcessRecord="false">
+		<Condition Type="TimerCondition" Name="UpdateTagValueTimer" Interval_0.1s="30" Init="True"/>
+		<ProcessParameters>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="BindTagToDb_Equal" Wait="5" NextStepIndex="2">
+			  <StepAction Container="TagToDbDataBinding_Equal" Action="BindingAction"/>
+			</Step>
+
+			<Step Index="2" Name="Wait" Wait="5" NextStepIndex="-1">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="1000"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+	
+	<!-- 定义数据行比较条件为Max时的DataBinding资源-->
+	<Resource Type="DataBinding" Name="DbToTagDataBinding_Max" LinkType="DBToTag" Enable="true" >
+	    <DBSourceSelect DBTable="TestDBTable" DBField="testID" ConditionType="Max" ConditionValueType="int16"> 
+		   <DBConnection Type="Sqlserver" ConnectionString="server=192.168.11.18;database=ND01_GA;uid=sa;pwd=123456;"/>
+	    </DBSourceSelect>
+		<BindingItems>
+		    <BindingItem Machine="TestMachine1" Tag="STAG" DBField="testInt"/>
+			<BindingItem Machine="TestMachine1" Tag="testbool" DBField="testBool"/>
+		</BindingItems>
+	</Resource>
+	<!-- 定义执行数据捆绑的Process资源，数据捆绑执行顺序Equal=>Max=>Min -->
+	<Resource Type="Process" Name="TestDataBindingProcess" Enable="true" LogOutput="true" IsProcessRecord="false">
+		<Condition Type="TimerCondition" Name="UpdateTagValueTimer" Interval_0.1s="30" Init="True"/>
+		<ProcessParameters>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="BindDbToTag_Max" Wait="5" NextStepIndex="2">
+			  <StepAction Container="DbToTagDataBinding_Max" Action="BindingAction"/>
+			</Step>
+			<Step Index="2" Name="Wait" Wait="5" NextStepIndex="-1">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="2000"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+	
+	<!-- 定义TagToTag类型的DataBinding资源-->
+	<Resource Type="DataBinding" Name="TagToTagDataBinding" LinkType="TagToTag" Enable="true" >
+		<BindingItems>
+			<BindingItem SourceMachine="TestMachine2" SourceTag="ABtestDint" DestMachine="TestMachine1" DestTag="STAG"/>
+			<BindingItem SourceMachine="TestMachine2" SourceTag="ABtestBool" DestMachine="TestMachine1" DestTag="testbool"/>
+		</BindingItems>
+	</Resource>
+	<!-- 定义执行数据捆绑的Process资源-->
+	<Resource Type="Process" Name="TestDataBindingProcess" Enable="true" LogOutput="true" IsProcessRecord="false">
+		<Condition Type="TimerCondition" Name="UpdateTagValueTimer" Interval_0.1s="30" Init="True"/>
+		<ProcessParameters>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="BindTagToTag" Wait="5" NextStepIndex="2">
+			  <StepAction Container="TagToTagDataBinding" Action="BindingAction"/>
+			</Step>
+
+			<Step Index="2" Name="Wait" Wait="5" NextStepIndex="-1">
+				<StepAction Container="Common" Action="WaitAction">
+					<InParameter ActionParameter="WaitTime" ConstValue="1000"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+	
+	<Resource Type="Process" Name="TestProcess" Enable="true" LogOutput="true" IsProcessRecord="false">
+		<ProcessParameters>
+			<ProcessParameter Name="ProcessPar1" Type="int16" />
+			<ProcessParameter Name="ProcessPar2" Type="int16" />
+			<ProcessParameter Name="ProcessPar3" Type="int16" />
+		</ProcessParameters>
+		<Condition Type="SingleTagOnCondition" Name="上升沿触发" Container="TestMachine1" Tag="testbool"/>
+		<ProcessParameters>
+		</ProcessParameters>
+		<Steps>
+			<Step Index="1" Name="获取值1" NextStepIndex="2">
+				<StepAction Container="TestMachine2" Action="GetABtestDint">
+					<OutParameter ProcessParameter="ProcessPar1" ActionParameter="Result"/>
+				</StepAction>
+			</Step>
+			<Step Index="2" Name="获取值2" NextStepIndex="3">
+				<StepAction Container="TestMachine1" Action="GetConstTag">
+					<OutParameter ProcessParameter="ProcessPar2" ActionParameter="Result"/>
+				</StepAction>
+			</Step>
+			<Step Index="3" Name="计算逻辑" Wait="5" NextStepIndex="4">
+				<StepAction Container="Common" Action="TwoParameterCalculateAction">
+					<InParameter ProcessParameter="ProcessPar1" ActionParameter="ActionParameter1"/>
+					<InParameter ProcessParameter="ProcessPar2" ActionParameter="ActionParameter2"/>
+					<InParameter ActionParameter="CalculateType" ConstValue="Add"/>
+					<OutParameter ProcessParameter="ProcessPar3" ActionParameter="ResultParameter"/>
+				</StepAction>
+			</Step>
+			<Step Index="4" Name="写入值" NextStepIndex="-1">
+				<StepAction Container="TestMachine1" Action="WriteSTAG">
+					<InParameter ProcessParameter="ProcessPar3" ActionParameter="Value"/>
+				</StepAction>
+			</Step>
+		</Steps>
+	</Resource>
+ </Resources>
+</root>

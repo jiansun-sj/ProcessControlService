@@ -1,0 +1,34 @@
+<root>
+  <Configs>
+    <DBConnection Name="agvdb" Type="mysql" ConnectionString="server=localhost;Port=3306; user=sa; password=123456;database=agvdb;"/>
+    <Redundancy Enable="false"/>
+  </Configs>
+  <Resources>
+    <Resource Type="AGVControlCenter" Name="Controller1" DbConnection="agvdb" Enable="true" >
+      <Agvs>
+        <Agv Index="1" Name="agv1" IP="192.168.11.100" Port="9001" LocalIP="192.168.11.12" LocalPort="9000"/>
+      </Agvs>
+      <Charges>
+        <Charge Index="1" Name="charge1" IP="192.168.11.101" Port="9001" LocalIP="192.168.11.12" LocalPort="9002"/>
+      </Charges>
+      <Actions>
+        <!--Agv移动-->
+        <Action Type="AgvRunAction" Name="Run">
+          <InParameter Name="AgvName" Type="string"/>
+          <InParameter Name="TargetNode" Type="string"/>
+          <OutParameter Name="Result" Type="string"/>
+        </Action>
+        <!--Agv下降托盘-->
+        <Action Type="AgvTrayDownAction" Name="Up">
+          <InParameter Name="AgvName" Type="string"/>
+          <OutParameter Name="Result" Type="string"/>
+        </Action>
+        <!--Agv上升托盘-->
+        <Action Type="AgvTrayUpAction" Name="Down">
+          <InParameter Name="AgvName" Type="string"/>
+          <OutParameter Name="Result" Type="string"/>
+        </Action>
+      </Actions>
+    </Resource>
+  </Resources>
+</root>

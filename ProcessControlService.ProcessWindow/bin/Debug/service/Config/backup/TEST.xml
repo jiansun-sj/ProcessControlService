@@ -1,0 +1,881 @@
+﻿<root>
+<Configs>
+</Configs>
+<Resources>
+	<Resource Type="Machine" Name="FE1Machine" NeedDataSync="True" Enable="true">
+		<DataSources>
+			<DataSource Type="InternalDataSource" Name="FE1GroupWrite" IPAddress="172.16.10.9" UpdateInterval="2200">
+				
+				<Tag  Name="FE010_Order.From_MEB.TPS" Address="FE010_Order.From_MEB.TPS" TagType="string" />
+				<Tag  Name="FE010_Order.From_MEB.Data_Send" Address="FE010_Order.From_MEB.Data_Send" TagType="bool" />
+				<Tag  Name="FE010_Order.From_MEB.Complete" Address="FE010_Order.From_MEB.Complete" TagType="bool" />
+				<Tag  Name="FE010_Order.From_MEB.Fault_Code" Address="FE010_Order.From_MEB.Fault_Code" TagType="int16" />
+				<Tag  Name="FE010_Order.From_MEB.Reset" Address="FE010_Order.From_MEB.Reset" TagType="bool" />
+				<Tag  Name="FE010_Order.From_MEB.Heartbeat" Address="FE010_Order.From_MEB.Heartbeat" TagType="bool" />
+				<Tag  Name="FE010_Order.From_MEB.Request_ID" Address="FE010_Order.From_MEB.Request_ID" TagType="int16" />
+				<Tag  Name="FE010_TP.From_MEB.Data_Send" Address="FE010_TP.From_MEB.Data_Send" TagType="bool" />	
+				<Tag  Name="FE010_TP.From_MEB.BSN" Address="FE010_TP.From_MEB.BSN" TagType="string" />	
+				<Tag  Name="FE010_TP.From_MEB.Complete" Address="FE010_TP.From_MEB.Complete" TagType="bool" />	
+				<Tag  Name="FE010_Screen.RemainNum" Address="FE010_Screen.Remain_Num" TagType="int32" />
+				<Tag  Name="FE010_Screen.Prod.Plan" Address="FE010_Screen.Prod.Plan" TagType="int32" />	
+				
+				<Tag Name="FE010_Screen_OP_Return" Address="FE010_Screen_OP_Return" TagType="bool" />
+				<Tag Name="FE020_Screen_OP_Return" Address="FE020_Screen_OP_Return" TagType="bool" />
+				<Tag Name="FE040_Screen_OP_Return" Address="FE040_Screen_OP_Return" TagType="bool" />
+				<Tag Name="FE080_Screen_OP_Return" Address="FE080_Screen_OP_Return" TagType="bool" />
+				
+				
+
+				<Tag  Name="FE020_Order.From_MEB.TPS" Address="FE020_Order.From_MEB.TPS" TagType="string" />
+				<Tag  Name="FE020_Order.From_MEB.Data_Send" Address="FE020_Order.From_MEB.Data_Send" TagType="bool" />
+				<Tag  Name="FE020_Order.From_MEB.Complete" Address="FE020_Order.From_MEB.Complete" TagType="bool" />
+				<Tag  Name="FE020_Order.From_MEB.Fault_Code" Address="FE020_Order.From_MEB.Fault_Code" TagType="int16" />
+				<Tag  Name="FE020_Order.From_MEB.Reset" Address="FE020_Order.From_MEB.Reset" TagType="bool" />
+				<Tag  Name="FE020_Order.From_MEB.Request_ID" Address="FE020_Order.From_MEB.Request_ID" TagType="int16" />
+				<Tag  Name="FE020_TP.From_MEB.Data_Send" Address="FE020_TP.From_MEB.Data_Send" TagType="bool" />	
+				<Tag  Name="FE020_TP.From_MEB.BSN" Address="FE020_TP.From_MEB.BSN" TagType="string" />	
+				<Tag  Name="FE020_TP.From_MEB.Complete" Address="FE020_TP.From_MEB.Complete" TagType="bool" />				
+				
+				
+				
+
+				<Tag  Name="FE040_Order.From_MEB.TPS" Address="FE040_Order.From_MEB.TPS" TagType="string" />
+				<Tag  Name="FE040_Order.From_MEB.Data_Send" Address="FE040_Order.From_MEB.Data_Send" TagType="bool" />
+				<Tag  Name="FE040_Order.From_MEB.Complete" Address="FE040_Order.From_MEB.Complete" TagType="bool" />
+				<Tag  Name="FE040_Order.From_MEB.Fault_Code" Address="FE040_Order.From_MEB.Fault_Code" TagType="int16" />
+				<Tag  Name="FE040_Order.From_MEB.Reset" Address="FE040_Order.From_MEB.Reset" TagType="bool" />
+				<Tag  Name="FE040_Order.From_MEB.Request_ID" Address="FE040_Order.From_MEB.Request_ID" TagType="int16" />
+				<Tag  Name="FE040_TP.From_MEB.Data_Send" Address="FE040_TP.From_MEB.Data_Send" TagType="bool" />	
+				<Tag  Name="FE040_TP.From_MEB.BSN" Address="FE040_TP.From_MEB.BSN" TagType="string" />	
+				<Tag  Name="FE040_TP.From_MEB.Complete" Address="FE040_TP.From_MEB.Complete" TagType="bool" />				
+				
+					
+
+
+				<Tag  Name="FE080_Order.From_MEB.TPS" Address="FE080_Order.From_MEB.TPS" TagType="string" />
+				<Tag  Name="FE080_Order.From_MEB.Data_Send" Address="FE080_Order.From_MEB.Data_Send" TagType="bool" />
+				<Tag  Name="FE080_Order.From_MEB.Complete" Address="FE080_Order.From_MEB.Complete" TagType="bool" />
+				<Tag  Name="FE080_Order.From_MEB.Fault_Code" Address="FE080_Order.From_MEB.Fault_Code" TagType="int16" />
+				<Tag  Name="FE080_Order.From_MEB.Reset" Address="FE080_Order.From_MEB.Reset" TagType="bool" />
+				<Tag  Name="FE080_Order.From_MEB.Request_ID" Address="FE080_Order.From_MEB.Request_ID" TagType="int16" />
+				<Tag  Name="FE080_TP.From_MEB.Data_Send" Address="FE080_TP.From_MEB.Data_Send" TagType="bool" />	
+				<Tag  Name="FE080_TP.From_MEB.BSN" Address="FE080_TP.From_MEB.BSN" TagType="string" />	
+				<Tag  Name="FE080_TP.From_MEB.Complete" Address="FE080_TP.From_MEB.Complete" TagType="bool" />
+				
+
+				<Tag  Name="FE110_TP.From_MEB.Data_Send" Address="FE110_TP.From_MEB.Data_Send" TagType="bool" />	
+				<Tag  Name="FE110_TP.From_MEB.BSN" Address="FE110_TP.From_MEB.BSN" TagType="string" />	
+				<Tag  Name="FE110_TP.From_MEB.Complete" Address="FE110_TP.From_MEB.Complete" TagType="bool" />
+				
+				<!-- 上线tag -->
+				<Tag  Name="FE_OnLine.From_MEB.Data_Send" Address="FE_OnLine.From_MEB.Data_Send" TagType="bool" />
+				<Tag  Name="FE_OnLine.From_MEB.Complete" Address="FE_OnLine.From_MEB.Complete" TagType="bool" />
+				<Tag  Name="FE_OnLine.From_MEB.Reset" Address="FE_OnLine.From_MEB.Reset" TagType="bool" />
+				<Tag  Name="FE_OnLine.From_MEB.TPS" Address="FE_OnLine.From_MEB.TPS" TagType="string" />
+				<Tag  Name="FE_OnLine.To_MEB.Data_Request" Address="FE_OnLine.To_MEB.Data_Request" TagType="bool" />
+				<Tag  Name="FE_OnLine.To_MEB.Data_Receive" Address="FE_OnLine.To_MEB.Data_Receive" TagType="bool" />
+				<Tag  Name="FE_OnLine.To_MEB.Fault_Code" Address="FE_OnLine.To_MEB.Fault_Code" TagType="int16" />
+				<Tag  Name="FE_OnLine.To_MEB.Aft_TPS" Address="FE_OnLine.To_MEB.Aft_TPS" TagType="string" />
+				<Tag  Name="FE_OnLine.To_MEB.TPS" Address="FE_OnLine.To_MEB.TPS" TagType="string" />
+				<!-- 下线tag -->
+				<Tag  Name="FE_OffLine.From_MEB.Data_Receive" Address="FE_OffLine.From_MEB.Data_Receive" TagType="bool" />
+				<Tag  Name="FE_OffLine.From_MEB.Reset" Address="FE_OffLine.From_MEB.Reset" TagType="bool" />
+				<Tag  Name="FE_OffLine.To_MEB.Data_Send" Address="FE_OffLine.To_MEB.Data_Send" TagType="bool" />
+				<Tag  Name="FE_OffLine.To_MEB.TPS" Address="FE_OffLine.To_MEB.TPS" TagType="string" />
+				<Tag  Name="FE_OffLine.To_MEB.Fault_Code" Address="FE_OffLine.To_MEB.Fault_Code" TagType="int16" />
+				
+ 			</DataSource>
+			<DataSource Type="InternalDataSource" Name="FE1GroupRead" IPAddress="172.16.10.5" Port="44818" Slot="0" UpdateInterval="600">
+					<Tag Name="FE010_Order.To_MEB.Data_Request" Address="FE_INT[0].0" TagType="bool" />
+					<Tag Name="FE010_Order.To_MEB.Data_Receive" Address="FE_INT[1]" TagType="int16" />
+					<Tag Name="FE010_Order.To_MEB.Line_Name" Address="FE010_STRING_36[0],L36" TagType="string" />
+					<Tag Name="FE010_Order.To_MEB.STA" Address="FE010_STRING_36[1],L36" TagType="string" />
+					<Tag Name="FE010_Order.To_MEB.Heartbeat" Address="FE_INT[0].1" TagType="bool" />
+					<Tag Name="FE010_Order.To_MEB.Request_ID" Address="FE_INT[2]" TagType="int16" />
+					<Tag Name="FE010_Order.To_MEB.Fault_Code" Address="FE_INT[3]" TagType="int16" />
+					<Tag Name="FE010_Screen.Current_TPS" Address="FE010_STRING_36[2],L36" TagType="string" />
+					<Tag Name="FE010_Screen.Next_TPS" Address="FE010_STRING_36[3],L36" TagType="string" />
+					<Tag Name="FE010_Screen.Mode.Auto" Address="FE_INT[0].2" TagType="bool" />
+					<Tag Name="FE010_Screen.Mode.OP" Address="FE_INT[0].3" TagType="bool" />
+					<Tag Name="FE010_Screen.Mode.Convey" Address="FE_INT[0].4" TagType="bool" />
+					<Tag Name="FE010_Screen.Prod.ACT" Address="FE_DINT[0]" TagType="int32" />
+					<Tag Name="FE010_Screen.Prod.CarType[0]" Address="FE_DINT[1]" TagType="int32" />
+					<Tag Name="FE010_Screen.Prod.CarType[1]" Address="FE_DINT[2]" TagType="int32" />
+					<Tag Name="FE010_Screen.Prod.CarType[2]" Address="FE_DINT[3]" TagType="int32" />
+					<Tag Name="FE010_Screen.Prod.CarType[3]" Address="FE_DINT[4]" TagType="int32" />
+					<Tag Name="FE010_Screen.OP_CT" Address="FE_DINT[5]" TagType="int32" />
+					<Tag Name="FE010_Order.Count[8].shift1" Address="FE_DINT[6]" TagType="int32" />
+					<Tag Name="FE010_Order.Count[9].shift2" Address="FE_DINT[7]" TagType="int32" />
+					<Tag Name="FE010_Screen.OP_Update" Address="FE_INT[0].5" TagType="bool" />
+					<Tag Name="FE010_TP.To_MEB.Data_Request" Address="FE_INT[0].7" TagType="bool" />
+					<Tag Name="FE010_TP.To_MEB.STA" Address="FE010_STRING_36[4],L36" TagType="string" />
+					<Tag Name="FE010_TP.To_MEB.BSN" Address="FE010_STRING_36[5],L36" TagType="string" />
+					<Tag Name="FE010_TP.To_MEB.Fault_Code" Address="FE_INT[4]" TagType="int16" />
+					<Tag Name="FE010_TP.To_MEB.Result" Address="FE_INT[5]" TagType="int16" />
+					<Tag Name="FE010_Order.OEM.Fault_Code" Address="FE_INT[6]" TagType="int16" />
+					
+					
+					
+					<Tag Name="FE020_Order.To_MEB.Data_Request" Address="FE_INT[20].0" TagType="bool" />
+					<Tag Name="FE020_Order.To_MEB.Data_Receive" Address="FE_INT[21]" TagType="int16" />
+					<Tag Name="FE020_Order.To_MEB.Line_Name" Address="FE020_STRING_36[0],L36" TagType="string" />
+					<Tag Name="FE020_Order.To_MEB.STA" Address="FE020_STRING_36[1],L36" TagType="string" />
+					<Tag Name="FE020_Order.To_MEB.Heartbeat" Address="FE_INT[20].1" TagType="bool" />
+					<Tag Name="FE020_Order.To_MEB.Request_ID" Address="FE_INT[22]" TagType="int16" />
+					<Tag Name="FE020_Order.To_MEB.Fault_Code" Address="FE_INT[23]" TagType="int16" />
+					<Tag Name="FE020_Screen.Current_TPS" Address="FE020_STRING_36[2],L36" TagType="string" />
+					<Tag Name="FE020_Screen.Next_TPS" Address="FE020_STRING_36[3],L36" TagType="string" />
+					<Tag Name="FE020_Screen.Mode.Auto" Address="FE_INT[20].2" TagType="bool" />
+					<Tag Name="FE020_Screen.Mode.OP" Address="FE_INT[20].3" TagType="bool" />
+					<Tag Name="FE020_Screen.Mode.Convey" Address="FE_INT[20].4" TagType="bool" />
+					<Tag Name="FE020_Screen.Prod.ACT" Address="FE_DINT[20]" TagType="int32" />
+					<Tag Name="FE020_Screen.Prod.CarType[0]" Address="FE_DINT[21]" TagType="int32" />
+					<Tag Name="FE020_Screen.Prod.CarType[1]" Address="FE_DINT[22]" TagType="int32" />
+					<Tag Name="FE020_Screen.Prod.CarType[2]" Address="FE_DINT[23]" TagType="int32" />
+					<Tag Name="FE020_Screen.Prod.CarType[3]" Address="FE_DINT[24]" TagType="int32" />
+					<Tag Name="FE020_Screen.OP_CT" Address="FE_DINT[25]" TagType="int32" />
+					<Tag Name="FE020_Order.Count[8].shift1" Address="FE_DINT[26]" TagType="int32" />
+					<Tag Name="FE020_Order.Count[9].shift2" Address="FE_DINT[27]" TagType="int32" />
+					<Tag Name="FE020_Screen.OP_Update" Address="FE_INT[20].5" TagType="bool" />
+					<!-- <Tag Name="FE020_Screen_OP_Return" Address="FE_INT[20].6" TagType="bool" /> -->
+					<Tag Name="FE020_TP.To_MEB.Data_Request" Address="FE_INT[20].7" TagType="bool" />
+					<Tag Name="FE020_TP.To_MEB.STA" Address="FE020_STRING_36[4],L36" TagType="string" />
+					<Tag Name="FE020_TP.To_MEB.BSN" Address="FE020_STRING_36[5],L36" TagType="string" />
+					<Tag Name="FE020_TP.To_MEB.Fault_Code" Address="FE_INT[24]" TagType="int16" />
+					<Tag Name="FE020_TP.To_MEB.Result" Address="FE_INT[25]" TagType="int16" />
+					<Tag Name="FE020_Order.OEM.Fault_Code" Address="FE_INT[26]" TagType="int16" />
+					
+					
+					<Tag Name="FE040_Order.To_MEB.Data_Request" Address="FE_INT[40].0" TagType="bool" />
+					<Tag Name="FE040_Order.To_MEB.Data_Receive" Address="FE_INT[41]" TagType="int16" />
+					<Tag Name="FE040_Order.To_MEB.Line_Name" Address="FE040_STRING_36[0],L36" TagType="string" />
+					<Tag Name="FE040_Order.To_MEB.STA" Address="FE040_STRING_36[1],L36" TagType="string" />
+					<Tag Name="FE040_Order.To_MEB.Heartbeat" Address="FE_INT[40].1" TagType="bool" />
+					<Tag Name="FE040_Order.To_MEB.Request_ID" Address="FE_INT[42]" TagType="int16" />
+					<Tag Name="FE040_Order.To_MEB.Fault_Code" Address="FE_INT[43]" TagType="int16" />
+					<Tag Name="FE040_Screen.Current_TPS" Address="FE040_STRING_36[2],L36" TagType="string" />
+					<Tag Name="FE040_Screen.Next_TPS" Address="FE040_STRING_36[3],L36" TagType="string" />
+					<Tag Name="FE040_Screen.Mode.Auto" Address="FE_INT[40].2" TagType="bool" />
+					<Tag Name="FE040_Screen.Mode.OP" Address="FE_INT[40].3" TagType="bool" />
+					<Tag Name="FE040_Screen.Mode.Convey" Address="FE_INT[40].4" TagType="bool" />
+					<Tag Name="FE040_Screen.Prod.ACT" Address="FE_DINT[40]" TagType="int32" />
+					<Tag Name="FE040_Screen.Prod.CarType[0]" Address="FE_DINT[41]" TagType="int32" />
+					<Tag Name="FE040_Screen.Prod.CarType[1]" Address="FE_DINT[42]" TagType="int32" />
+					<Tag Name="FE040_Screen.Prod.CarType[2]" Address="FE_DINT[43]" TagType="int32" />
+					<Tag Name="FE040_Screen.Prod.CarType[3]" Address="FE_DINT[44]" TagType="int32" />
+					<Tag Name="FE040_Screen.OP_CT" Address="FE_DINT[45]" TagType="int32" />
+					<Tag Name="FE040_Order.Count[8].shift1" Address="FE_DINT[46]" TagType="int32" />
+					<Tag Name="FE040_Order.Count[9].shift2" Address="FE_DINT[47]" TagType="int32" />
+					<Tag Name="FE040_Screen.OP_Update" Address="FE_INT[40].5" TagType="bool" />
+					<!-- <Tag Name="FE040_Screen_OP_Return" Address="FE_INT[40].6" TagType="bool" /> -->
+					<Tag Name="FE040_TP.To_MEB.Data_Request" Address="FE_INT[40].7" TagType="bool" />
+					<Tag Name="FE040_TP.To_MEB.STA" Address="FE040_STRING_36[4],L36" TagType="string" />
+					<Tag Name="FE040_TP.To_MEB.BSN" Address="FE040_STRING_36[5],L36" TagType="string" />
+					<Tag Name="FE040_TP.To_MEB.Fault_Code" Address="FE_INT[44]" TagType="int16" />
+					<Tag Name="FE040_TP.To_MEB.Result" Address="FE_INT[45]" TagType="int16" />
+					<Tag Name="FE040_Order.OEM.Fault_Code" Address="FE_INT[46]" TagType="int16" />
+					
+					
+					<Tag Name="FE080_Order.To_MEB.Data_Request" Address="FE_INT[60].0" TagType="bool" />
+					<Tag Name="FE080_Order.To_MEB.Data_Receive" Address="FE_INT[61]" TagType="int16" />
+					<Tag Name="FE080_Order.To_MEB.Line_Name" Address="FE080_STRING_36[0],L36" TagType="string" />
+					<Tag Name="FE080_Order.To_MEB.STA" Address="FE080_STRING_36[1],L36" TagType="string" />
+					<Tag Name="FE080_Order.To_MEB.Heartbeat" Address="FE_INT[60].1" TagType="bool" />
+					<Tag Name="FE080_Order.To_MEB.Request_ID" Address="FE_INT[62]" TagType="int16" />
+					<Tag Name="FE080_Order.To_MEB.Fault_Code" Address="FE_INT[63]" TagType="int16" />
+					<Tag Name="FE080_Screen.Current_TPS" Address="FE080_STRING_36[2],L36" TagType="string" />
+					<Tag Name="FE080_Screen.Next_TPS" Address="FE080_STRING_36[3],L36" TagType="string" />
+					<Tag Name="FE080_Screen.Mode.Auto" Address="FE_INT[60].2" TagType="bool" />
+					<Tag Name="FE080_Screen.Mode.OP" Address="FE_INT[60].3" TagType="bool" />
+					<Tag Name="FE080_Screen.Mode.Convey" Address="FE_INT[60].4" TagType="bool" />
+					<Tag Name="FE080_Screen.Prod.ACT" Address="FE_DINT[60]" TagType="int32" />
+					<Tag Name="FE080_Screen.Prod.CarType[0]" Address="FE_DINT[61]" TagType="int32" />
+					<Tag Name="FE080_Screen.Prod.CarType[1]" Address="FE_DINT[62]" TagType="int32" />
+					<Tag Name="FE080_Screen.Prod.CarType[2]" Address="FE_DINT[63]" TagType="int32" />
+					<Tag Name="FE080_Screen.Prod.CarType[3]" Address="FE_DINT[64]" TagType="int32" />
+					<Tag Name="FE080_Screen.OP_CT" Address="FE_DINT[65]" TagType="int32" />
+					<Tag Name="FE080_Order.Count[8].shift1" Address="FE_DINT[66]" TagType="int32" />
+					<Tag Name="FE080_Order.Count[9].shift2" Address="FE_DINT[67]" TagType="int32" />
+					<Tag Name="FE080_Screen.OP_Update" Address="FE_INT[60].5" TagType="bool" />
+					<!-- <Tag Name="FE080_Screen_OP_Return" Address="FE_INT[60].6" TagType="bool" /> -->
+					<Tag Name="FE080_TP.To_MEB.Data_Request" Address="FE_INT[60].7" TagType="bool" />
+					<Tag Name="FE080_TP.To_MEB.STA" Address="FE080_STRING_36[4],L36" TagType="string" />
+					<Tag Name="FE080_TP.To_MEB.BSN" Address="FE080_STRING_36[5],L36" TagType="string" />
+					<Tag Name="FE080_TP.To_MEB.Fault_Code" Address="FE_INT[64]" TagType="int16" />
+					<Tag Name="FE080_TP.To_MEB.Result" Address="FE_INT[65]" TagType="int16" />
+					<Tag Name="FE080_Order.OEM.Fault_Code" Address="FE_INT[66]" TagType="int16" />
+					
+					
+					<Tag Name="FE110_TP.To_MEB.Data_Request" Address="FE_INT[80].7" TagType="bool" />
+					<Tag Name="FE110_TP.To_MEB.STA" Address="FE110_STRING_36[4],L36" TagType="string" />
+					<Tag Name="FE110_TP.To_MEB.BSN" Address="FE110_STRING_36[5],L36" TagType="string" />
+					<Tag Name="FE110_TP.To_MEB.Fault_Code" Address="FE_INT[84]" TagType="int16" />
+					<Tag Name="FE110_TP.To_MEB.Result" Address="FE_INT[85]" TagType="int16" />
+					
+					
+					<Tag Name="FE_Sequence_CarType[1]" Address="FE_Sequence_CarType[1],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[2]" Address="FE_Sequence_CarType[2],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[3]" Address="FE_Sequence_CarType[3],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[4]" Address="FE_Sequence_CarType[4],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[5]" Address="FE_Sequence_CarType[5],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[6]" Address="FE_Sequence_CarType[6],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[7]" Address="FE_Sequence_CarType[7],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[8]" Address="FE_Sequence_CarType[8],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[9]" Address="FE_Sequence_CarType[9],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[10]" Address="FE_Sequence_CarType[10],L4" TagType="string" />
+					<Tag Name="FE_Sequence_CarType[11]" Address="FE_Sequence_CarType[11],L4" TagType="string" />
+					
+					<Tag  Name="FE10_STATTE"  Address="FE_INT[7].0"  TagType="bool" />
+					<Tag  Name="FE20_STATTE"  Address="FE_INT[7].1"  TagType="bool" />
+					<Tag  Name="FE30_STATTE"  Address="FE_INT[7].2"  TagType="bool" />
+					<Tag  Name="FE40_STATTE"  Address="FE_INT[7].3"  TagType="bool" />
+					<Tag  Name="FE50_STATTE"  Address="FE_INT[7].4"  TagType="bool" />
+					<Tag  Name="FE60_STATTE"  Address="FE_INT[7].5"  TagType="bool" />
+					<Tag  Name="FE70_STATTE"  Address="FE_INT[7].6"  TagType="bool" />
+					<Tag  Name="FE80_STATTE"  Address="FE_INT[7].7"  TagType="bool" />
+					<Tag  Name="FE90_STATTE"  Address="FE_INT[7].8"  TagType="bool" />
+					<Tag  Name="FE100_STATTE"  Address="FE_INT[7].9"  TagType="bool" />
+					<Tag  Name="FE110_STATTE"  Address="FE_INT[7].10"  TagType="bool" />
+
+					<Tag  Name="FE10_Screen.ACT2"  Address="FE_DINT[8]"  TagType="int32" />
+					<Tag  Name="FE20_Screen.ACT2"  Address="FE_DINT[28]"  TagType="int32" />
+					<Tag  Name="FE40_Screen.ACT2"  Address="FE_DINT[48]"  TagType="int32" />
+					<Tag  Name="FE80_Screen.ACT2"  Address="FE_DINT[68]"  TagType="int32" />
+
+					<Tag  Name="FE10_Screen.LAST_OPCT"  Address="FE_DINT[17]"  TagType="int32" />
+					<Tag  Name="FE20_Screen.LAST_OPCT"  Address="FE_DINT[37]"  TagType="int32" />
+					<Tag  Name="FE40_Screen.LAST_OPCT"  Address="FE_DINT[57]"  TagType="int32" />
+					<Tag  Name="FE80_Screen.LAST_OPCT"  Address="FE_DINT[77]"  TagType="int32" />
+
+
+
+		
+ 			</DataSource>
+		</DataSources>
+		<Actions>
+		<!--下线-->
+		<!--读取TPS -->
+		<Action Type="TagsAction" Name="ReadOfflineTPS">
+		    <OutParameter Name="TPS" Type="string" />
+          <ActionItem Type="ReadTag" Tag="FE_OffLine.To_MEB.TPS" OutParameter="TPS"  />
+        </Action>
+		<!-- 反馈PLC读取完成信号-->
+		<Action Type="TagsAction" Name="WriteReceive">    
+          <ActionItem Type="WriteTag" Tag="FE_OffLine.From_MEB.Data_Receive" ConstValue="True"  />
+        </Action>
+		<!-- 读取错误代码 -->
+		<Action Type="TagsAction" Name="ReadOfflineFaultCode"> 
+		  <OutParameter Name="FaultCode" Type="string" />
+          <ActionItem Type="ReadTag" Tag="FE_OffLine.To_MEB.Fault_Code" OutParameter="FaultCode"  />
+        </Action>
+		<!--心跳-->
+		<Action Type="TagsAction" Name="SetHeartbeat">
+          <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.Heartbeat" ConstValue="True" />
+        </Action>
+		
+		<!--心跳复位-->
+		<Action Type="TagsAction" Name="SetHeartbeatFalse">
+          <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.Heartbeat" ConstValue="False" />
+        </Action>
+					<!--读取工位当前计时-->
+		<Action Type="TagsAction" Name="FE10ReadOPCT">
+          <OutParameter Name="OPCT" Type="int32" />
+          <ActionItem Type="ReadTag" Tag="FE10_Screen.LAST_OPCT" OutParameter="OPCT" />
+        </Action>	
+		<!--记录工位节拍到数据库-->
+		<Action Type="RecordStationBeat" Name="RecordStationBeat">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" /> 
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="OPCT" Type="int32" />
+        </Action>
+		<!--读取工位当前计时-->
+		<Action Type="TagsAction" Name="FE20ReadOPCT">
+          <OutParameter Name="OPCT" Type="int32" />
+          <ActionItem Type="ReadTag" Tag="FE20_Screen.LAST_OPCT" OutParameter="OPCT" />
+        </Action>
+		<!--读取工位当前计时-->
+		<Action Type="TagsAction" Name="FE40ReadOPCT">
+          <OutParameter Name="OPCT" Type="int32" />
+          <ActionItem Type="ReadTag" Tag="FE40_Screen.LAST_OPCT" OutParameter="OPCT" />
+        </Action>
+		<!--读取工位当前计时-->
+		<Action Type="TagsAction" Name="FE80ReadOPCT">
+          <OutParameter Name="OPCT" Type="int32" />
+          <ActionItem Type="ReadTag" Tag="FE80_Screen.LAST_OPCT" OutParameter="OPCT" />
+        </Action>
+<!--FE010屏幕订单请求-->	
+		<!--读取线体和工位-->
+		<Action Type="TagsAction" Name="FE010ReadStation">
+          <OutParameter Name="Line" Type="String" />
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE010_Order.To_MEB.Line_Name" OutParameter="Line" />
+          <ActionItem Type="ReadTag" Tag="FE010_Order.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE010_Order.To_MEB.Request_ID" OutParameter="RequestID" />
+        </Action>		
+		<!--写TPS-->
+		<Action Type="TagsAction" Name="FE010WriteTPS">
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.TPS" InParameter="TPS" />
+		  <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.Request_ID" InParameter="RequestID" />
+		  <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.Data_Send" ConstValue="True" />
+        </Action>		
+		<!--检查接收结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE010CheckRecive">
+          <ActionItem Type="CheckTag" Tag="FE010_Order.To_MEB.Data_Receive" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE010_Order.To_MEB.Data_Receive" ConstValue="2" />
+        </Action>
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE010ReadReceiveCode">
+          <OutParameter Name="ReceiveCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE010_Order.To_MEB.Data_Receive" OutParameter="ReceiveCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE010_Order.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE010SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.Complete" ConstValue="True" />
+        </Action>
+		<!--复位-->
+		<Action Type="TagsAction" Name="FE010Reset">
+          <ActionItem Type="WriteTag" Tag="FE010_Order.From_MEB.Reset" ConstValue="True" />
+        </Action>
+		<!--查询TPS-->
+		<Action Type="GetScreenTPSAction" Name="FE010GetTPS">
+          <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		    <InParameter Name="Mark" Type="String" DefaultValue="1"/><!-- 判断是否为线首-->
+		  <InParameter Name="DBConnection" Type="String" />
+          <OutParameter Name="TPS" Type="String" />
+        </Action>	
+		<!--更新订单位置-->
+		<Action Type="UpdateScreenAction" Name="FE010UpdateScreenTPS">
+          <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		  <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+        </Action>
+		
+		<!--（线首有该Action）设置车辆状态为已下发-->
+		<Action Type="SetCarStateAction" Name="FE010SetCarState">
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="State" Type="int16"/>
+          <InParameter Name="DBConnection" Type="String" />
+        </Action>
+				
+		<!--订单下发数据库记录-->
+		<Action Type="OrderLogAction" Name="FE010OrderSendLog">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+          <InParameter Name="Type" Type="string" DefaultValue="Online"/>
+        </Action>
+	
+
+<!--FE020屏幕订单请求-->	
+		<!--读取线体和工位-->
+		<Action Type="TagsAction" Name="FE020ReadStation">
+          <OutParameter Name="Line" Type="String" />
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE020_Order.To_MEB.Line_Name" OutParameter="Line" />
+          <ActionItem Type="ReadTag" Tag="FE020_Order.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE020_Order.To_MEB.Request_ID" OutParameter="RequestID" />
+        </Action>		
+		<!--写TPS-->
+		<Action Type="TagsAction" Name="FE020WriteTPS">
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="WriteTag" Tag="FE020_Order.From_MEB.TPS" InParameter="TPS" />
+		  <ActionItem Type="WriteTag" Tag="FE020_Order.From_MEB.Request_ID" InParameter="RequestID" />
+		  <ActionItem Type="WriteTag" Tag="FE020_Order.From_MEB.Data_Send" ConstValue="True" />
+        </Action>		
+		<!--检查接收结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE020CheckRecive">
+          <ActionItem Type="CheckTag" Tag="FE020_Order.To_MEB.Data_Receive" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE020_Order.To_MEB.Data_Receive" ConstValue="2" />
+        </Action>
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE020ReadReceiveCode">
+          <OutParameter Name="ReceiveCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE020_Order.To_MEB.Data_Receive" OutParameter="ReceiveCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE020_Order.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE020SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE020_Order.From_MEB.Complete" ConstValue="True" />
+        </Action>
+		<!--复位-->
+		<Action Type="TagsAction" Name="FE020Reset">
+          <ActionItem Type="WriteTag" Tag="FE020_Order.From_MEB.Reset" ConstValue="True" />
+        </Action>
+		<!--查询TPS-->
+		<Action Type="GetScreenTPSAction" Name="FE020GetTPS">
+          <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		    <InParameter Name="Mark" Type="String" /><!-- 判断是否为线首-->
+		  <InParameter Name="DBConnection" Type="String" />
+          <OutParameter Name="TPS" Type="String" />
+        </Action>	
+		<!--更新订单位置-->
+		<Action Type="UpdateScreenAction" Name="FE020UpdateScreenTPS">
+          <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		  <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+        </Action>
+				
+		<!--订单下发数据库记录-->
+		<Action Type="OrderLogAction" Name="FE020OrderSendLog">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+          <InParameter Name="Type" Type="string" DefaultValue="Online"/>
+        </Action>		
+		
+	
+<!--FE020过点Actions-->
+		<!--读取过点工位和BSN-->
+		<Action Type="TagsAction" Name="FE020TP_ReadBSN">
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="BSN" Type="String"/>
+          <ActionItem Type="ReadTag" Tag="FE020_TP.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE020_TP.To_MEB.BSN" OutParameter="BSN" />
+        </Action>
+		<!--反写BSN-->
+		<Action Type="TagsAction" Name="FE020TP_WriteBSN">
+          <InParameter Name="BSN" Type="String"/>
+          <ActionItem Type="WriteTag" Tag="FE020_TP.From_MEB.BSN" InParameter="BSN" />
+		  <ActionItem Type="WriteTag" Tag="FE020_TP.From_MEB.Data_Send" ConstValue="True" />
+        </Action>
+		
+		<!--等待反馈结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE020TP_CheckResult">
+          <ActionItem Type="CheckTag" Tag="FE020_TP.To_MEB.Result" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE020_TP.To_MEB.Result" ConstValue="2" />
+        </Action>
+		
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE020TP_ReadResultCode">
+          <OutParameter Name="ResultCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE020_TP.To_MEB.Result" OutParameter="ResultCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE020_TP.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE020TP_SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE020_TP.From_MEB.Complete" ConstValue="True" />
+        </Action>
+
+		<!--过点数据库记录-->
+		<Action Type="TPLogAction" Name="FE020TP_Log">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="BSN" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+        </Action>
+   
+<!--FE040屏幕订单请求-->
+	
+		<!--读取线体和工位-->
+		<Action Type="TagsAction" Name="FE040ReadStation">
+          <OutParameter Name="Line" Type="String" />
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE040_Order.To_MEB.Line_Name" OutParameter="Line" />
+          <ActionItem Type="ReadTag" Tag="FE040_Order.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE040_Order.To_MEB.Request_ID" OutParameter="RequestID" />
+        </Action>		
+		<!--写TPS-->
+		<Action Type="TagsAction" Name="FE040WriteTPS">
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="WriteTag" Tag="FE040_Order.From_MEB.TPS" InParameter="TPS" />
+		  <ActionItem Type="WriteTag" Tag="FE040_Order.From_MEB.Request_ID" InParameter="RequestID" />
+		  <ActionItem Type="WriteTag" Tag="FE040_Order.From_MEB.Data_Send" ConstValue="True" />
+        </Action>		
+		<!--检查接收结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE040CheckRecive">
+          <ActionItem Type="CheckTag" Tag="FE040_Order.To_MEB.Data_Receive" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE040_Order.To_MEB.Data_Receive" ConstValue="2" />
+        </Action>
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE040ReadReceiveCode">
+          <OutParameter Name="ReceiveCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE040_Order.To_MEB.Data_Receive" OutParameter="ReceiveCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE040_Order.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE040SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE040_Order.From_MEB.Complete" ConstValue="True" />
+        </Action>
+		<!--复位-->
+		<Action Type="TagsAction" Name="FE040Reset">
+          <ActionItem Type="WriteTag" Tag="FE040_Order.From_MEB.Reset" ConstValue="True" />
+        </Action>
+		<!--查询TPS-->
+		<Action Type="GetScreenTPSAction" Name="FE040GetTPS">	
+		 <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		    <InParameter Name="Mark" Type="String" /><!-- 判断是否为线首-->
+		  <InParameter Name="DBConnection" Type="String" />
+          <OutParameter Name="TPS" Type="String" />
+        </Action>
+		<!--更新订单位置-->
+		<Action Type="UpdateScreenAction" Name="FE040UpdateScreenTPS">
+          <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		  <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+        </Action>
+		
+		<!--订单下发数据库记录-->
+		<Action Type="OrderLogAction" Name="FE040OrderSendLog">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+          <InParameter Name="Type" Type="string" DefaultValue="Online"/>
+        </Action>	
+
+	
+<!--FE040过点Actions-->
+		<!--读取过点工位和BSN-->
+		<Action Type="TagsAction" Name="FE040TP_ReadBSN">
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="BSN" Type="String"/>
+          <ActionItem Type="ReadTag" Tag="FE040_TP.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE040_TP.To_MEB.BSN" OutParameter="BSN" />
+        </Action>
+		<!--反写BSN-->
+		<Action Type="TagsAction" Name="FE040TP_WriteBSN">
+          <InParameter Name="BSN" Type="String"/>
+          <ActionItem Type="WriteTag" Tag="FE040_TP.From_MEB.BSN" InParameter="BSN" />
+		  <ActionItem Type="WriteTag" Tag="FE040_TP.From_MEB.Data_Send" ConstValue="True" />
+        </Action>
+		
+		<!--等待反馈结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE040TP_CheckResult">
+          <ActionItem Type="CheckTag" Tag="FE040_TP.To_MEB.Result" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE040_TP.To_MEB.Result" ConstValue="2" />
+        </Action>
+		
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE040TP_ReadResultCode">
+          <OutParameter Name="ResultCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE040_TP.To_MEB.Result" OutParameter="ResultCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE040_TP.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE040TP_SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE040_TP.From_MEB.Complete" ConstValue="True" />
+        </Action>
+
+		<!--过点数据库记录-->
+		<Action Type="TPLogAction" Name="FE040TP_Log">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="BSN" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+        </Action>
+   
+<!--FE080屏幕订单请求-->
+
+		<!--读取线体和工位-->
+		<Action Type="TagsAction" Name="FE080ReadStation">
+          <OutParameter Name="Line" Type="String" />
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE080_Order.To_MEB.Line_Name" OutParameter="Line" />
+          <ActionItem Type="ReadTag" Tag="FE080_Order.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE080_Order.To_MEB.Request_ID" OutParameter="RequestID" />
+        </Action>		
+		<!--写TPS-->
+		<Action Type="TagsAction" Name="FE080WriteTPS">
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="RequestID" Type="int16" />
+          <ActionItem Type="WriteTag" Tag="FE080_Order.From_MEB.TPS" InParameter="TPS" />
+		  <ActionItem Type="WriteTag" Tag="FE080_Order.From_MEB.Request_ID" InParameter="RequestID" />
+		  <ActionItem Type="WriteTag" Tag="FE080_Order.From_MEB.Data_Send" ConstValue="True" />
+        </Action>		
+		<!--检查接收结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE080CheckRecive">
+          <ActionItem Type="CheckTag" Tag="FE080_Order.To_MEB.Data_Receive" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE080_Order.To_MEB.Data_Receive" ConstValue="2" />
+        </Action>
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE080ReadReceiveCode">
+          <OutParameter Name="ReceiveCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE080_Order.To_MEB.Data_Receive" OutParameter="ReceiveCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE080_Order.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE080SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE080_Order.From_MEB.Complete" ConstValue="True" />
+        </Action>
+		<!--复位-->
+		<Action Type="TagsAction" Name="FE080Reset">
+          <ActionItem Type="WriteTag" Tag="FE080_Order.From_MEB.Reset" ConstValue="True" />
+        </Action>
+		<!--查询TPS-->
+		<Action Type="GetScreenTPSAction" Name="FE080GetTPS">
+          <InParameter Name="Factory" Type="int16" />
+		  <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		    <InParameter Name="Mark" Type="String" /><!-- 判断是否为线首-->
+		  <InParameter Name="DBConnection" Type="String" />
+          <OutParameter Name="TPS" Type="String" />
+        </Action>
+		<!--更新订单位置-->
+		<Action Type="UpdateScreenAction" Name="FE080UpdateScreenTPS">
+          <InParameter Name="Factory" Type="int16" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+		  <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+        </Action>
+		
+		<!--订单下发数据库记录-->
+		<Action Type="OrderLogAction" Name="FE080OrderSendLog">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+          <InParameter Name="Type" Type="string" DefaultValue="Online"/>
+        </Action>		
+	
+	
+<!--FE080过点Actions-->
+		<!--读取过点工位和BSN-->
+		<Action Type="TagsAction" Name="FE080TP_ReadBSN">
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="BSN" Type="String"/>
+          <ActionItem Type="ReadTag" Tag="FE080_TP.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE080_TP.To_MEB.BSN" OutParameter="BSN" />
+        </Action>
+		<!--反写BSN-->
+		<Action Type="TagsAction" Name="FE080TP_WriteBSN">
+          <InParameter Name="BSN" Type="String"/>
+          <ActionItem Type="WriteTag" Tag="FE080_TP.From_MEB.BSN" InParameter="BSN" />
+		  <ActionItem Type="WriteTag" Tag="FE080_TP.From_MEB.Data_Send" ConstValue="True" />
+        </Action>
+		
+		<!--等待反馈结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="FE080TP_CheckResult">
+          <ActionItem Type="CheckTag" Tag="FE080_TP.To_MEB.Result" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE080_TP.To_MEB.Result" ConstValue="2" />
+        </Action>
+		
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="FE080TP_ReadResultCode">
+          <OutParameter Name="ResultCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE080_TP.To_MEB.Result" OutParameter="ResultCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE080_TP.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="FE080TP_SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE080_TP.From_MEB.Complete" ConstValue="True" />
+        </Action>
+
+		<!--过点数据库记录-->
+		<Action Type="TPLogAction" Name="FE080TP_Log">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="BSN" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+        </Action>
+   
+<!--1FE上线过点Actions-->
+		<!--读取过点工位和BSN-->
+		<Action Type="TagsAction" Name="OnlineTP_ReadBSN">
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="BSN" Type="String"/>
+          <ActionItem Type="ReadTag" Tag="FE010_TP.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE010_TP.To_MEB.BSN" OutParameter="BSN" />
+        </Action>
+		<!--反写BSN-->
+		<Action Type="TagsAction" Name="OnlineTP_WriteBSN">
+          <InParameter Name="BSN" Type="String"/>
+          <ActionItem Type="WriteTag" Tag="FE010_TP.From_MEB.BSN" InParameter="BSN" />
+		  <ActionItem Type="WriteTag" Tag="FE010_TP.From_MEB.Data_Send" ConstValue="True" />
+        </Action>
+		
+		<!--等待反馈结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="OnlineTP_CheckResult">
+          <ActionItem Type="CheckTag" Tag="FE010_TP.To_MEB.Result" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE010_TP.To_MEB.Result" ConstValue="2" />
+        </Action>
+		
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="OnlineTP_ReadResultCode">
+          <OutParameter Name="ResultCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE010_TP.To_MEB.Result" OutParameter="ResultCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE010_TP.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="OnlineTP_SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE010_TP.From_MEB.Complete" ConstValue="True" />
+        </Action>
+		<!--设置车辆状态为已上线-->
+		<Action Type="SetCarStateAction" Name="OnlineTP_SetCarState">
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="State" Type="int16"/>
+          <InParameter Name="DBConnection" Type="String" />
+        </Action>
+		<!--过点数据库记录-->
+		<Action Type="TPLogAction" Name="OnlineTP_Log">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="BSN" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+        </Action>
+	
+<!--1FE下线过点Actions-->
+		<!--读取过点工位和BSN-->
+		<Action Type="TagsAction" Name="OfflineTP_ReadBSN">
+          <OutParameter Name="Station" Type="String" />
+          <OutParameter Name="BSN" Type="String"/>
+          <ActionItem Type="ReadTag" Tag="FE110_TP.To_MEB.STA" OutParameter="Station" />
+          <ActionItem Type="ReadTag" Tag="FE110_TP.To_MEB.BSN" OutParameter="BSN" />
+        </Action>
+		<!--反写BSN-->
+		<Action Type="TagsAction" Name="OfflineTP_WriteBSN">
+          <InParameter Name="BSN" Type="String"/>
+          <ActionItem Type="WriteTag" Tag="FE110_TP.From_MEB.BSN" InParameter="BSN" />
+		  <ActionItem Type="WriteTag" Tag="FE110_TP.From_MEB.Data_Send" ConstValue="True" />
+        </Action>
+		
+		<!--发送DataSend-->
+		<Action Type="TagsAction" Name="OfflineTP_DataSend">
+          <ActionItem Type="WriteTag" Tag="FE110_TP.From_MEB.Data_Send" ConstValue="True" />
+        </Action>
+		
+		<!--等待反馈结果-->
+        <Action Type="TagsAction" CheckResultType="AnyTag" Name="OfflineTP_CheckResult">
+          <ActionItem Type="CheckTag" Tag="FE110_TP.To_MEB.Result" ConstValue="1" />
+		  <ActionItem Type="CheckTag" Tag="FE110_TP.To_MEB.Result" ConstValue="2" />
+        </Action>
+		<!--读取接收结果-->
+		<Action Type="TagsAction" Name="OfflineTP_ReadResultCode">
+          <OutParameter Name="ResultCode" Type="int16" />
+		  <OutParameter Name="FaultCode" Type="int16" />
+          <ActionItem Type="ReadTag" Tag="FE110_TP.To_MEB.Result" OutParameter="ResultCode" />	  
+          <ActionItem Type="ReadTag" Tag="FE110_TP.To_MEB.Fault_Code" OutParameter="FaultCode" />
+        </Action>	
+		
+		<!--发送完成-->
+		<Action Type="TagsAction" Name="OfflineTP_SetComplete">
+          <ActionItem Type="WriteTag" Tag="FE110_TP.From_MEB.Complete" ConstValue="True" />
+        </Action>
+		<!--设置车辆状态为已下线-->
+		<Action Type="SetCarStateAction" Name="OfflineTP_SetCarState">
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="TPS" Type="String" />
+          <InParameter Name="State" Type="int16"/>
+          <InParameter Name="DBConnection" Type="String" />
+        </Action>
+		<!--过点数据库记录-->
+		<Action Type="TPLogAction" Name="OfflineTP_Log">
+          <InParameter Name="Station" Type="String" />
+          <InParameter Name="Line" Type="String" />
+          <InParameter Name="BSN" Type="String" />
+          <InParameter Name="DBConnection" Type="String" />
+          <InParameter Name="FaultCode" Type="int16" />
+        </Action>
+	
+	</Actions>
+	</Resource>
+	
+	<!--FE010订单请求-->
+    <Resource Type="Process" Name="FE010订单请求" NeedDataSync="False" Enable="true" LogOutput="true" >
+      <Condition Type="SingleTagOnCondition" Name="订单请求" Container="FE1Machine" Tag="FE010_Order.To_MEB.Data_Request" />
+      <ProcessParameters>
+	    <ProcessParameter Name="Factory" Type="int16" DefaultValue="1"/>
+		<!--车辆状态3已下发-->
+        <ProcessParameter Name="State" Type="int16" DefaultValue="3"/>
+        <ProcessParameter Name="Station" Type="string"/>
+        <ProcessParameter Name="Line" Type="string"/>
+        <ProcessParameter Name="RequestID" Type="int16"/>
+        <ProcessParameter Name="TPS" Type="string" DefaultValue="q111"/>
+        <ProcessParameter Name="FaultCode" Type="int16" />
+        <ProcessParameter Name="ReceiveCode" Type="int16" />
+        <ProcessParameter Name="DBConnection" Type="string" DefaultValue="SAICDatabase" />
+      </ProcessParameters>
+      <Steps>
+        <Step Index="1" Name="读取线体和工位" Sync="true" Wait="5" NextStepIndex="2">
+          <StepAction Container="FE1Machine" Action="FE010ReadStation">
+            <OutParameter ProcessParameter="Station" ActionParameter="Station" />
+            <OutParameter ProcessParameter="Line" ActionParameter="Line" />
+            <OutParameter ProcessParameter="RequestID" ActionParameter="RequestID" />
+			<ShowParameter ProcessParameter="RequestID"/>
+          </StepAction>
+        </Step>
+       
+		<Step Index="2" Name="写TPS" Wait="5" Sync="true" NextStepIndex="3">
+          <StepAction Container="FE1Machine" Action="FE010WriteTPS">
+			<InParameter ProcessParameter="TPS" ActionParameter="TPS" />
+			<InParameter ProcessParameter="RequestID" ActionParameter="RequestID" />
+          </StepAction>
+		   
+        </Step>
+		 <Step Index="3" Name="发送完成信号" Sync="true" Wait="5" NextStepIndex="4">
+          <StepAction Container="FE1Machine" Action="FE010SetComplete">
+          </StepAction>
+        </Step>
+        <Step Index="4" Name="TrueWaiting" Sync="true" NextStepIndex="5" >
+    <StepAction Container="Common" Action="WaitAction">
+     <InParameter ActionParameter="WaitTime" ConstValue="6000"/>
+    </StepAction>
+   </Step>
+		<Step Index="5" Name="检查接收" Wait="25" NextStepIndex="6">
+          <StepAction Container="FE1Machine" Action="FE010CheckRecive">
+          </StepAction>
+        </Step>
+		<Step Index="6" Name="订单下发记录数据库" Wait="5" Sync="true" NextStepIndex="-1">
+          <StepAction Container="FE1Machine" Action="FE010OrderSendLog">
+            <InParameter ProcessParameter="DBConnection" ActionParameter="DBConnection" />
+            <InParameter ProcessParameter="Station" ActionParameter="Station" />
+            <InParameter ProcessParameter="Line" ActionParameter="Line" />
+            <InParameter ProcessParameter="TPS" ActionParameter="TPS" />
+            <InParameter ProcessParameter="FaultCode" ActionParameter="FaultCode" />
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+   
+</Resources>
+</root>
+

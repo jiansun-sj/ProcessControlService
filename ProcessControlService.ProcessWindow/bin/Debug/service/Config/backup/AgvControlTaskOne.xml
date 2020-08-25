@@ -1,0 +1,1035 @@
+<root>
+  <Configs>
+    <DBConnection Name="agvdb" Type="mysql"
+                  ConnectionString="server=localhost;Port=3306; user=root; password=123456;database=test;" />
+    <Redundancy Enable="false" SyncInterval="500" />
+  </Configs>
+  <Resources>
+    <!--定义资源模板-->
+    <ResourceTemplates>
+      <!--Agv通用动作模板-->
+      <ResourceTemplate Name="AgvPointer" TargetResourceType="VirtualAgv">
+        <Actions>
+          <!--Agv移动-->
+          <Action Type="AgvVirtualRunAction" Name="MoveForward">
+            <InParameter Name="TargetNode" Type="string" />
+            <OutParameter Name="Result" Type="string" />
+          </Action>
+          <!--Agv启动皮带轮旋转-->
+          <Action Type="AgvVirtualRotateConveyorAction" Name="AgvRotateConveyorAction">
+          </Action>
+          <!--Agv停止皮带轮旋转-->
+          <Action Type="AgvVirtualStopRotateConveyorAction" Name="AgvStopRotateConveyorAction">
+          </Action>
+          <!--Agv获取空盘中转码头节点-->
+          <Action Type="GetNextNodeAction" Name="GetNextNodeAction">
+            <OutParameter Name="NextNode" Type="string" />
+          </Action>
+          <Action Type="TaskOneNearlyFinishAction" Name="TaskOneNearlyFinishAction">
+          </Action>
+          <Action Type="InspectElectricityAction" Name="InspectElectricityAction">
+            <OutParameter Name="ResultCode" Type="int16" />
+          </Action>
+          <Action Type="CheckIfHasAnotherTaskOneAction" Name="CheckIfHasAnotherTaskOneAction">
+            <OutParameter Name="HasNextTask" Type="int16" />
+            <OutParameterDictionary Name="SelectedResources" Type="string" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+
+      <!--清洗机空盘中转码头Machine通用动作-->
+      <ResourceTemplate Name="EmptyTrayDistributorTemplate" TargetResourceType="Machine">
+        <Actions>
+          <Action Type="TagsAction" Name="CheckTrayStatusAction">
+            <OutParameter Name="WhetherHasTray" Type="bool" />
+            <ActionItem Type="ReadTag" Tag="HasMaterial_OutStation" OutParameter="WhetherHasTray" />
+          </Action>
+          <Action Type="TagsAction" Name="SetOutAgvArriveTagAction">
+            <ActionItem Type="WriteTag" Tag="AgvArrived_OutStation" ConstValue="1" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_OutStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="RotateOutConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_OutStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="CheckOutArriveTagStatusAction">
+            <OutParameter Name="ArriveTagValue" Type="bool" />
+            <ActionItem Type="ReadTag" Tag="AgvAllowLeave_OutStation" OutParameter="ArriveTagValue" />
+          </Action>
+          <Action Type="TagsAction" Name="StopRotateOutConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_OutStation" ConstValue="0" />
+          </Action>
+          <Action Type="TagsAction" Name="AgvOutReadyToLeaveAction">
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_OutStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvAllowLeave_OutStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvArrived_OutStation" ConstValue="0" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+
+      <!--清洗机对接码头Machine通用动作-->
+      <ResourceTemplate Name="TrayMaterialHandlerTemplate" TargetResourceType="Machine">
+        <Actions>
+          <!--清洗机空盘回收码头动作-->
+          <Action Type="TagsAction" Name="SetInAgvArriveTagAction">
+            <ActionItem Type="WriteTag" Tag="AgvArrived_InStation" ConstValue="1" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_InStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="RotateInConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_InStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="CheckInArriveTagStatusAction">
+            <OutParameter Name="ArriveTagValue" Type="bool" />
+            <ActionItem Type="ReadTag" Tag="AgvAllowLeave_InStation" OutParameter="ArriveTagValue" />
+          </Action>
+          <Action Type="TagsAction" Name="StopRotateInConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_InStation" ConstValue="0" />
+          </Action>
+          <Action Type="TagsAction" Name="AgvInReadyToLeaveAction">
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_InStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvAllowLeave_InStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_InStation" ConstValue="0" />
+          </Action>
+          <!--清洗机接料码头动作-->
+          <Action Type="TagsAction" Name="SetOutAgvArriveTagAction">
+            <ActionItem Type="WriteTag" Tag="AgvArrived_OutStation" ConstValue="1" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_OutStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="RotateOutConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_OutStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="CheckOutArriveTagStatusAction">
+            <OutParameter Name="ArriveTagValue" Type="bool" />
+            <ActionItem Type="ReadTag" Tag="AgvAllowLeave_OutStation" OutParameter="ArriveTagValue" />
+          </Action>
+          <Action Type="TagsAction" Name="StopRotateOutConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_OutStation" ConstValue="0" />
+          </Action>
+          <Action Type="TagsAction" Name="AgvOutReadyToLeaveAction">
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_OutStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvAllowLeave_OutStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_OutStation" ConstValue="0" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+
+      <!--检验线供料机码头Machine通用动作-->
+      <ResourceTemplate Name="MaterialInspectorTemplate" TargetResourceType="Machine">
+        <Actions>
+          <Action Type="TagsAction" Name="SetInAgvArriveTagAction">
+            <ActionItem Type="WriteTag" Tag="AgvArrived_InStation" ConstValue="1" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_InStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="RotateInConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_InStation" ConstValue="1" />
+          </Action>
+          <Action Type="TagsAction" Name="CheckInArriveTagStatusAction">
+            <OutParameter Name="ArriveTagValue" Type="bool" />
+            <ActionItem Type="ReadTag" Tag="AgvAllowLeave_InStation" OutParameter="ArriveTagValue" />
+          </Action>
+          <Action Type="TagsAction" Name="StopRotateInConveyorAction">
+            <ActionItem Type="WriteTag" Tag="ConveyTray_InStation" ConstValue="0" />
+          </Action>
+          <Action Type="TagsAction" Name="AgvInReadyToLeaveAction">
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_InStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvAllowLeave_InStation" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock_InStation" ConstValue="0" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+    </ResourceTemplates>
+
+    <!--Agv资源定义-->
+    <Resource Type="VirtualAgv" Name="agv1" Index="1" ResourceTemplate="AgvPointer" Enable="true" IP="192.168.11.100"
+              Port="9001" LocalIP="192.168.11.13" LocalPort="9000" />
+    <Resource Type="VirtualAgv" Name="agv2" Index="2" ResourceTemplate="AgvPointer" Enable="true" IP="192.168.11.100"
+              Port="9001" LocalIP="192.168.11.13" LocalPort="9000" />
+    <Resource Type="VirtualAgv" Name="agv3" Index="3" ResourceTemplate="AgvPointer" Enable="true" IP="192.168.11.100"
+              Port="9001" LocalIP="192.168.11.13" LocalPort="9000" />
+
+    <!--清洗机空盘中转码头出工位（两个）-->
+    <Resource Name="EmptyTrayDistributorA" Type="Machine" ResourceTemplate="EmptyTrayDistributorTemplate"
+              Enable="True">
+      <DataSources>
+        <DataSource Name="清洗机空盘中转码头" Type="InternalDataSource" UpdateInterval="500">
+          <!--清洗机空盘中转码头进工位-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool"/>
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="TrayType" Address="D2000" TagType="int16" DefaultValue="1"/>
+          <!--清洗机空盘中转码头出工位-->
+          <Tag Name="HasMaterial_OutStation" Address="M2010" TagType="bool" DefaultValue="True"/>
+          <Tag Name="AgvArrived_OutStation" Address="M2011" TagType="bool" />
+          <Tag Name="ConveyTray_OutStation" Address="M2012" TagType="bool" />
+          <Tag Name="AgvAllowLeave_OutStation" Address="M2013" TagType="bool" />
+          <Tag Name="AgvReady_OutStation" Address="M2014" TagType="bool" />
+          <Tag Name="AgvNodesLock_OutStation" Address="M2015" TagType="bool" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="EmptyTrayDistributorB" Type="Machine" ResourceTemplate="EmptyTrayDistributorTemplate"
+              Enable="True">
+      <DataSources>
+        <DataSource Name="清洗机空盘中转码头" Type="InternalDataSource" UpdateInterval="500">
+          <!--清洗机空盘中转码头进工位-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool"/>
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="TrayType" Address="D2000" TagType="int16" DefaultValue="2"/>
+          <!--清洗机空盘中转码头出工位-->
+          <Tag Name="HasMaterial_OutStation" Address="M2010" TagType="bool" DefaultValue="True"/>
+          <Tag Name="AgvArrived_OutStation" Address="M2011" TagType="bool" />
+          <Tag Name="ConveyTray_OutStation" Address="M2012" TagType="bool" />
+          <Tag Name="AgvAllowLeave_OutStation" Address="M2013" TagType="bool" />
+          <Tag Name="AgvReady_OutStation" Address="M2014" TagType="bool" />
+          <Tag Name="AgvNodesLock_OutStation" Address="M2015" TagType="bool" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <!--清洗机对接码头（四个）-->
+    <Resource Name="TrayMaterialHandlerA" Type="Machine" ResourceTemplate="TrayMaterialHandlerTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="清洗机对接码头" Type="InternalDataSource" UpdateInterval="500">
+          <!--清洗机空盘回收码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="TrayType" Address="D2000" TagType="int16" DefaultValue="1"/>
+          <!--清洗机接料码头-->
+          <Tag Name="HasMaterial_OutStation" Address="M2010" TagType="bool" />
+          <Tag Name="AgvArrived_OutStation" Address="M2011" TagType="bool" />
+          <Tag Name="ConveyTray_OutStation" Address="M2012" TagType="bool" />
+          <Tag Name="AgvAllowLeave_OutStation" Address="M2013" TagType="bool" />
+          <Tag Name="AgvReady_OutStation" Address="M2014" TagType="bool" />
+          <Tag Name="AgvNodesLock_OutStation" Address="M2015" TagType="bool" />
+          <Tag Name="MaterialType" Address="D2010" TagType="int16" DefaultValue="1"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="TrayMaterialHandlerB" Type="Machine" ResourceTemplate="TrayMaterialHandlerTemplate" Enable="True">
+      <DataSources>
+          <DataSource Name="清洗机对接码头" Type="InternalDataSource" UpdateInterval="500">
+          <!--清洗机空盘回收码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="TrayType" Address="D2000" TagType="int16" DefaultValue="1"/>
+          <!--清洗机接料码头-->
+          <Tag Name="HasMaterial_OutStation" Address="M2010" TagType="bool" />
+          <Tag Name="AgvArrived_OutStation" Address="M2011" TagType="bool" />
+          <Tag Name="ConveyTray_OutStation" Address="M2012" TagType="bool" />
+          <Tag Name="AgvAllowLeave_OutStation" Address="M2013" TagType="bool" />
+          <Tag Name="AgvReady_OutStation" Address="M2014" TagType="bool" />
+          <Tag Name="AgvNodesLock_OutStation" Address="M2015" TagType="bool" />
+          <Tag Name="MaterialType" Address="D2010" TagType="int16" DefaultValue="2"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="TrayMaterialHandlerC" Type="Machine" ResourceTemplate="TrayMaterialHandlerTemplate" Enable="True">
+      <DataSources>
+         <DataSource Name="清洗机对接码头" Type="InternalDataSource" UpdateInterval="500">
+          <!--清洗机空盘回收码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="TrayType" Address="D2000" TagType="int16" DefaultValue="1"/>
+          <!--清洗机接料码头-->
+          <Tag Name="HasMaterial_OutStation" Address="M2010" TagType="bool" />
+          <Tag Name="AgvArrived_OutStation" Address="M2011" TagType="bool" />
+          <Tag Name="ConveyTray_OutStation" Address="M2012" TagType="bool" />
+          <Tag Name="AgvAllowLeave_OutStation" Address="M2013" TagType="bool" />
+          <Tag Name="AgvReady_OutStation" Address="M2014" TagType="bool" />
+          <Tag Name="AgvNodesLock_OutStation" Address="M2015" TagType="bool" />
+          <Tag Name="MaterialType" Address="D2010" TagType="int16" DefaultValue="3"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="TrayMaterialHandlerD" Type="Machine" ResourceTemplate="TrayMaterialHandlerTemplate"
+              Enable="True">
+      <DataSources>
+          <DataSource Name="清洗机对接码头" Type="InternalDataSource" UpdateInterval="500">
+          <!--清洗机空盘回收码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="TrayType" Address="D2000" TagType="int16" DefaultValue="1"/>
+          <!--清洗机接料码头-->
+          <Tag Name="HasMaterial_OutStation" Address="M2010" TagType="bool" />
+          <Tag Name="AgvArrived_OutStation" Address="M2011" TagType="bool" />
+          <Tag Name="ConveyTray_OutStation" Address="M2012" TagType="bool" />
+          <Tag Name="AgvAllowLeave_OutStation" Address="M2013" TagType="bool" />
+          <Tag Name="AgvReady_OutStation" Address="M2014" TagType="bool" />
+          <Tag Name="AgvNodesLock_OutStation" Address="M2015" TagType="bool" />
+          <Tag Name="MaterialType" Address="D2010" TagType="int16" DefaultValue="4"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <!--喷砂检验线供料机（八个）-->
+    <Resource Name="MaterialInspectorA" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="1"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MaterialInspectorB" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="2"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MaterialInspectorC" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="3"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MaterialInspectorD" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="4"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+    <!--4-->
+    <Resource Name="MaterialInspectorE" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="5"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MaterialInspectorF" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="6"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MaterialInspectorG" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="1"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Name="MaterialInspectorH" Type="Machine" ResourceTemplate="MaterialInspectorTemplate" Enable="True">
+      <DataSources>
+        <DataSource Name="喷砂检验线供料机" Type="InternalDataSource" UpdateInterval="500">
+          <!--喷砂检验线供料机进码头-->
+          <Tag Name="HasMaterial_InStation" Address="M2000" TagType="bool" />
+          <Tag Name="AgvArrived_InStation" Address="M2001" TagType="bool" />
+          <Tag Name="ConveyTray_InStation" Address="M2002" TagType="bool" />
+          <Tag Name="AgvAllowLeave_InStation" Address="M2003" TagType="bool" />
+          <Tag Name="AgvReady_InStation" Address="M2004" TagType="bool" />
+          <Tag Name="AgvNodesLock_InStation" Address="M2005" TagType="bool" />
+          <Tag Name="MaterialType_InStation" Address="D2000" TagType="int16" DefaultValue="2"/>
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <!--Agv控制中心资源定义-->
+    <Resource Type="AGVControlCenter" Name="AGVControlCenter" UsingVirtualAgv="True" DbConnection="agvdb" Enable="true">
+      <Agvs>
+        <Agv Name="agv1" />
+        <Agv Name="agv2" />
+        <Agv Name="agv3" />
+      </Agvs>
+      <Actions>
+        <!--分配需要调用的资源-->
+        <Action Type="AssignAgvAction" Name="AssignAgvAction">
+          <InParameter Name="TargetNode" Type="string" />
+          <InParameter Name="TaskMark" Type="string" />
+          <OutParameter Name="AgvId" Type="string" />
+        </Action>
+      </Actions>
+    </Resource>
+
+    <!--Agv任务管理中心资源定义-->
+    <Resource Type="AgvTaskManager" Name="AgvTaskOneManager" DbConnection="agvdb" Enable="true">
+      <Actions>
+        <Action Type="AssignTrayDistributorAction" Name="AssignTrayDistributorAction">
+          <!--<InParameter Name="CallingMachine" Type="string" />
+          <OutParameter Name="DistributorNode" Type="string" />
+          <OutParameter Name="TaskId" Type="string" />
+          <OutParameter Name="Distributor" Type="string" />-->
+        </Action>
+        <Action Type="SetAgvTaskOneAction" Name="SetAgvTaskOneAction">
+          <!--<InParameter Name="CallingMachine" Type="string" />
+          <OutParameter Name="DistributorNode" Type="string" />
+          <OutParameter Name="TaskId" Type="string" />
+          <OutParameter Name="Distributor" Type="string" />-->
+        </Action>
+        <Action Type="AssignTrayMaterialHandlerAction" Name="AssignTrayMaterialHandlerAction">
+        </Action>
+        <Action Type="AssignMaterialInspectorAction" Name="AssignMaterialInspectorAction">
+        </Action>
+        <Action Type="AssignWaitPositionAction" Name="AssignWaitPositionAction">
+        </Action>
+        <Action Type="LackElectricityAlarmAction" Name="LackElectricityAlarmAction">
+        </Action>
+        <Action Type="DeleteTaskAction" Name="DeleteTaskAction">
+        </Action>
+      </Actions>
+    </Resource>
+
+
+    <!--定义主流程，任务1：清洗机对接码头与喷砂检验线供料机任务-->
+    <Resource Type="Process" Name="MainProcess" Enable="true" LogOutput="true" AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName" />
+          <ParameterKeyValuePair Key="MachineName" />
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="CallingMachine" Type="string" />
+        <ProcessParameter Name="CallingTag" Type="string" />
+        <ProcessParameter Name="TaskId" Type="string" />
+        <ProcessParameter Name="AgvTaskNumber" Type="int16" />
+        <ProcessParameter Name="DistributorNode" Type="string" />
+        <ProcessParameter Name="Distributor" Type="string" />
+        <ProcessParameter Name="AgvId" Type="string" />
+      </ProcessParameters>
+      <!--有个问题，使用MultiTagsOnCondition，必需要先加载Parameters-->
+      <Condition Type="MultiTagsOnCondition" Name="ConditionName" Container="MachineName" Tag="TagName">
+        <TrigTags>
+          <TrigTag Machine="TrayMaterialHandlerA" Tag="HasMaterial_OutStation" />
+          <TrigTag Machine="TrayMaterialHandlerB" Tag="HasMaterial_OutStation" />
+          <TrigTag Machine="TrayMaterialHandlerC" Tag="HasMaterial_OutStation" />
+          <TrigTag Machine="TrayMaterialHandlerD" Tag="HasMaterial_OutStation" />
+        </TrigTags>
+        <OutParameter MachineName="CallingMachine" TagName="CallingTag" />
+      </Condition>
+      <Steps>
+        <!--分配需要执行中转空盘的Machine-->
+        <Step Index="1" Name="AssignTrayDistributor" Wait="5" NextStepIndex="2">
+          <StepAction Container="AgvTaskOneManager" Action="AssignTrayDistributorAction">
+            <InParameter ActionParameter="CallingMachine" ProcessParameter="CallingMachine" />
+            <OutParameter ActionParameter="DistributorNode" ProcessParameter="DistributorNode" />
+            <OutParameter ActionParameter="TaskId" ProcessParameter="TaskId" />
+            <OutParameter ActionParameter="Distributor" ProcessParameter="Distributor" />
+          </StepAction>
+        </Step>
+        <!--分配Agv-->
+        <Step Index="2" Name="AssignAgv" Wait="5" NextStepIndex="3">
+          <StepAction Container="AGVControlCenter" Action="AssignAgvAction">
+            <InParameter ActionParameter="TargetNode" ProcessParameter="DistributorNode" />
+            <InParameter ActionParameter="TaskMark" ConstValue="Task1" />
+            <OutParameter ActionParameter="AgvId" ProcessParameter="AgvId" />
+          </StepAction>
+        </Step>
+        <!--设置需要执行下一子任务的Agv和Machine，并将生成的Task加载进选中的Agv中-->
+        <Step Index="3" Name="SetTaskOne" Wait="5" NextStepIndex="4">
+          <StepAction Container="AgvTaskOneManager" Action="SetAgvTaskOneAction">
+            <InParameter ActionParameter="TaskId" ProcessParameter="TaskId" />
+            <InParameter ActionParameter="AgvId" ProcessParameter="AgvId" />
+            <InParameter ActionParameter="Distributor" ProcessParameter="Distributor" />
+            <OutParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+            <OutParameter ActionParameter="AgvTaskNumber" ProcessParameter="AgvTaskNumber" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="AgvTaskNumber" ConstValue="1" NextStepIndex="4" />
+            <StepCheck ProcessParameter="AgvTaskNumber" ConstValue="2" NextStepIndex="-1" />
+          </StepChecks>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="4" Name="CallSubProcess" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="Task1_SubProcess1_GetEmptyTray" />
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="SelectedResources" />
+            <InParameter ActionParameter="SubProcessResources" ConstValue="SelectedResources" />
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+
+    <!--定义Task1子流程: Task1_SubProcess1_清洗机空盘中转码头接空托盘-->
+    <Resource Type="Process" Name="Task1_SubProcess1_GetEmptyTray" Enable="true" LogOutput="true" AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <!--
+      <BreakCondition Type="SingleTagChangeCondition" Name="BreakCondition" Container="TestCallingMachine"
+                      Tag="BreakTag" />
+      -->
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName" />
+          <ParameterKeyValuePair Key="MachineName" />
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="DistributorNode" Type="string" />
+        <ProcessParameter Name="RequiredTrayType" Type="string" />
+        <ProcessParameter Name="WhetherHasTray" Type="bool" />
+        <ProcessParameter Name="ArriveTagValue" Type="bool" />
+      </ProcessParameters>
+      <Steps>
+        <!--获得中转码头工位节点-->
+        <Step Index="1" Name="GetDistributorNode" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="GetNextNodeAction">
+            <OutParameter ActionParameter="NextNode" ProcessParameter="DistributorNode" />
+          </StepAction>
+        </Step>
+        <!--校验清洗机空盘中转码头有没有空盘-->
+        <Step Index="2" Name="CheckTrayStatus" Wait="5" NextStepIndex="4">
+          <StepAction Container="{Using EmptyTrayDistributorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="CheckTrayStatusAction">
+            <OutParameter ProcessParameter="WhetherHasTray" ActionParameter="WhetherHasTray" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,True是没有异常，False是有异常-->
+            <StepCheck ProcessParameter="WhetherHasTray" ConstValue="True" NextStepIndex="4" />
+            <StepCheck ProcessParameter="WhetherHasTray" ConstValue="False" NextStepIndex="3" />
+          </StepChecks>
+        </Step>
+
+        <Step Index="3" Name="Wait1" Wait="5" NextStepIndex="2">
+          <StepAction Container="Common" Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="2000" />
+          </StepAction>
+        </Step>
+
+        <Step Index="4" Name="AgvMoveToDistributor" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}" Action="MoveForward">
+            <InParameter ActionParameter="TargetNode" ProcessParameter="DistributorNode" />
+          </StepAction>
+        </Step>
+        <Step Index="5" Name="SetAgvArriveTag" Wait="5" NextStepIndex="6">
+          <StepAction Container="{Using EmptyTrayDistributorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="SetOutAgvArriveTagAction">
+          </StepAction>
+        </Step>
+        <Step Index="6" Name="AgvRotateConveyor" Wait="5" NextStepIndex="7">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvRotateConveyorAction">
+          </StepAction>
+        </Step>
+        <Step Index="7" Name="RotateOutConveyor" Wait="5" NextStepIndex="8">
+          <StepAction Container="{Using EmptyTrayDistributorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="RotateOutConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="8" Name="Wait2" Wait="5" NextStepIndex="9">
+          <StepAction Container="Common" Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="2000" />
+          </StepAction>
+        </Step>
+
+        <Step Index="9" Name="CheckOutArriveTagStatus" Wait="5" NextStepIndex="10">
+          <StepAction Container="{Using EmptyTrayDistributorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="CheckOutArriveTagStatusAction">
+            <OutParameter ProcessParameter="ArriveTagValue" ActionParameter="ArriveTagValue" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="False" NextStepIndex="8" />
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="True" NextStepIndex="10" />
+          </StepChecks>
+        </Step>
+
+        <Step Index="10" Name="AgvStopRotateConveyor" Wait="5" NextStepIndex="11">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvStopRotateConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="11" Name="StopRotateOutConveyor" Wait="5" NextStepIndex="12">
+          <StepAction Container="{Using EmptyTrayDistributorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="StopRotateOutConveyorAction">
+          </StepAction>
+        </Step>
+        <!--分配需要执行回收空盘的Machine-->
+        <Step Index="12" Name="AssignTrayReceiver" Wait="5" NextStepIndex="13">
+          <StepAction Container="AgvTaskOneManager" Action="AssignTrayMaterialHandlerAction">
+            <InParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+            <OutParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+          </StepAction>
+        </Step>
+        <Step Index="13" Name="AgvReadyToLeave" Wait="5" NextStepIndex="14">
+          <StepAction Container="{Using EmptyTrayDistributorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="AgvOutReadyToLeaveAction">
+          </StepAction>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="14" Name="CallSubProcess" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="Task1_SubProcess2_ReceiveEmptyTray" />
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="SelectedResources" />
+            <InParameter ActionParameter="SubProcessResources" ConstValue="SelectedResources" />
+          </StepAction>
+        </Step>
+
+      </Steps>
+    </Resource>
+
+    <!--定义Task1子流程: Task1_SubProcess2_清洗机空盘回收码头放空托盘-->
+    <Resource Type="Process" Name="Task1_SubProcess2_ReceiveEmptyTray" Enable="true" LogOutput="true"
+              AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <!--
+      <BreakCondition Type="SingleTagChangeCondition" Name="BreakCondition" Container="TestCallingMachine"
+                      Tag="BreakTag" />
+      -->
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName" />
+          <ParameterKeyValuePair Key="MachineName" />
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="TrayReceiverNode" Type="string" />
+        <ProcessParameter Name="RequiredTrayType" Type="string" />
+        <ProcessParameter Name="ResultCode" Type="int16" />
+        <ProcessParameter Name="ArriveTagValue" Type="bool" />
+      </ProcessParameters>
+      <Steps>
+        <!--获得中转码头工位节点-->
+        <Step Index="1" Name="GetTrayReceiverNode" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="GetNextNodeAction">
+            <OutParameter ActionParameter="NextNode" ProcessParameter="TrayReceiverNode" />
+          </StepAction>
+        </Step>
+        <Step Index="2" Name="AgvMoveToReceiver" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}" Action="MoveForward">
+            <InParameter ActionParameter="TargetNode" ProcessParameter="TrayReceiverNode" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="SetInAgvArriveTag" Wait="5" NextStepIndex="4">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="SetInAgvArriveTagAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="4" Name="RotateInConveyor" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="RotateInConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="5" Name="AgvRotateConveyor" Wait="5" NextStepIndex="6">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvRotateConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="6" Name="Wait2" Wait="5" NextStepIndex="7">
+          <StepAction Container="Common" Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="2000" />
+          </StepAction>
+        </Step>
+
+        <Step Index="7" Name="CheckInArriveTagStatus" Wait="5" NextStepIndex="8">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="CheckInArriveTagStatusAction">
+            <OutParameter ProcessParameter="ArriveTagValue" ActionParameter="ArriveTagValue" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="False" NextStepIndex="6" />
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="True" NextStepIndex="8" />
+          </StepChecks>
+        </Step>
+        <Step Index="8" Name="StopRotateInConveyor" Wait="5" NextStepIndex="9">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="StopRotateInConveyorAction">
+          </StepAction>
+        </Step>
+        <Step Index="9" Name="AgvStopRotateConveyor" Wait="5" NextStepIndex="10">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvStopRotateConveyorAction">
+          </StepAction>
+        </Step>
+        <!--分配需要执行接料的Machine
+        <Step Index="10" Name="AssignMaterialReceiver" Wait="5" NextStepIndex="11">
+          <StepAction Container="AgvTaskOneManager" Action="AssignMaterialReceiverAction">
+            <InParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+            <OutParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+          </StepAction>
+        </Step>-->
+        <Step Index="10" Name="AgvInReadyToLeave" Wait="5" NextStepIndex="11">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="AgvInReadyToLeaveAction">
+          </StepAction>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="11" Name="CallSubProcess" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="Task1_SubProcess3_ReceiveMaterial" />
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="SelectedResources" />
+            <InParameter ActionParameter="SubProcessResources" ConstValue="SelectedResources" />
+          </StepAction>
+        </Step>
+
+      </Steps>
+    </Resource>
+
+    <!--定义Task1子流程: Task1_SubProcess3_清洗机接料码头接物料-->
+    <Resource Type="Process" Name="Task1_SubProcess3_ReceiveMaterial" Enable="true" LogOutput="true"
+              AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <!--
+      <BreakCondition Type="SingleTagChangeCondition" Name="BreakCondition" Container="TestCallingMachine"
+                      Tag="BreakTag" />
+      -->
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName" />
+          <ParameterKeyValuePair Key="MachineName" />
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="MaterialReceiverNode" Type="string" />
+        <ProcessParameter Name="RequiredMaterialType" Type="string" />
+        <ProcessParameter Name="ResultCode" Type="int16" />
+        <ProcessParameter Name="ArriveTagValue" Type="bool" />
+      </ProcessParameters>
+      <Steps>
+        <!--获得接料码头工位节点-->
+        <Step Index="1" Name="GetMaterialReceiverNode" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="GetNextNodeAction">
+            <OutParameter ActionParameter="NextNode" ProcessParameter="MaterialReceiverNode" />
+          </StepAction>
+        </Step>
+
+        <Step Index="2" Name="AgvMoveToReceiver" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}" Action="MoveForward">
+            <InParameter ActionParameter="TargetNode" ProcessParameter="MaterialReceiverNode" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="SetOutAgvArriveTag" Wait="5" NextStepIndex="4">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="SetOutAgvArriveTagAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="4" Name="RotateOutConveyor" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="RotateOutConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="5" Name="AgvRotateConveyor" Wait="5" NextStepIndex="6">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvRotateConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="6" Name="Wait2" Wait="5" NextStepIndex="7">
+          <StepAction Container="Common" Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="2000" />
+          </StepAction>
+        </Step>
+
+        <Step Index="7" Name="CheckOutArriveTagStatus" Wait="5" NextStepIndex="8">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="CheckOutArriveTagStatusAction">
+            <OutParameter ProcessParameter="ArriveTagValue" ActionParameter="ArriveTagValue" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="False" NextStepIndex="6" />
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="True" NextStepIndex="8" />
+          </StepChecks>
+        </Step>
+        <Step Index="8" Name="StopRotateOutConveyor" Wait="5" NextStepIndex="9">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="StopRotateOutConveyorAction">
+          </StepAction>
+        </Step>
+        <Step Index="9" Name="AgvStopRotateConveyor" Wait="5" NextStepIndex="10">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvStopRotateConveyorAction">
+          </StepAction>
+        </Step>
+        <!--分配需要执行接料的Machine-->
+        <Step Index="10" Name="AssignMaterialInspector" Wait="5" NextStepIndex="11">
+          <StepAction Container="AgvTaskOneManager" Action="AssignMaterialInspectorAction">
+            <InParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+            <OutParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+          </StepAction>
+        </Step>
+        <Step Index="11" Name="AgvOutReadyToLeave" Wait="5" NextStepIndex="12">
+          <StepAction Container="{Using TrayMaterialHandlerTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="AgvOutReadyToLeaveAction">
+          </StepAction>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="12" Name="CallSubProcess" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="Task1_SubProcess4_InspectMaterial" />
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="SelectedResources" />
+            <InParameter ActionParameter="SubProcessResources" ConstValue="SelectedResources" />
+          </StepAction>
+        </Step>
+
+      </Steps>
+    </Resource>
+
+    <!--定义Task1子流程: Task1_SubProcess4_喷砂检验线供料机-->
+    <Resource Type="Process" Name="Task1_SubProcess4_InspectMaterial" Enable="true" LogOutput="true"
+              AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <!--
+      <BreakCondition Type="SingleTagChangeCondition" Name="BreakCondition" Container="TestCallingMachine"
+                      Tag="BreakTag" />
+      -->
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName" />
+          <ParameterKeyValuePair Key="MachineName" />
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="MaterialInspectorNode" Type="string" />
+        <ProcessParameter Name="RequiredMaterialType" Type="string" />
+        <ProcessParameter Name="ResultCode" Type="int16" />
+        <ProcessParameter Name="ArriveTagValue" Type="bool" />
+        <ProcessParameter Name="HasNextTask" Type="int16" />
+      </ProcessParameters>
+      <Steps>
+        <!--获得喷砂检验线供料机码头工位节点-->
+        <Step Index="1" Name="TaskOneNearlyFinish" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="TaskOneNearlyFinishAction">
+          </StepAction>
+        </Step>
+
+        <!--获得喷砂检验线供料机码头工位节点-->
+        <Step Index="2" Name="GetMaterialInspectorNode" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="GetNextNodeAction">
+            <OutParameter ActionParameter="NextNode" ProcessParameter="MaterialInspectorNode" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="AgvMoveToMaterialInspector" Wait="5" NextStepIndex="4">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}" Action="MoveForward">
+            <InParameter ActionParameter="TargetNode" ProcessParameter="MaterialInspectorNode" />
+          </StepAction>
+        </Step>
+        <Step Index="4" Name="SetAgvArriveTag" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using MaterialInspectorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="SetInAgvArriveTagAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="5" Name="MaterialInspectorRotateConveyor" Wait="5" NextStepIndex="6">
+          <StepAction Container="{Using MaterialInspectorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="RotateInConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="6" Name="AgvRotateConveyor" Wait="5" NextStepIndex="7">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvRotateConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="7" Name="Wait2" Wait="5" NextStepIndex="8">
+          <StepAction Container="Common" Action="WaitAction">
+            <InParameter ActionParameter="WaitTime" ConstValue="2000" />
+          </StepAction>
+        </Step>
+
+        <Step Index="8" Name="CheckArriveTagStatus" Wait="5" NextStepIndex="9">
+          <StepAction Container="{Using MaterialInspectorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="CheckInArriveTagStatusAction">
+            <OutParameter ProcessParameter="ArriveTagValue" ActionParameter="ArriveTagValue" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="False" NextStepIndex="7" />
+            <StepCheck ProcessParameter="ArriveTagValue" ConstValue="True" NextStepIndex="9" />
+          </StepChecks>
+        </Step>
+        <Step Index="9" Name="MaterialInspectorStopRotateConveyor" Wait="5" NextStepIndex="10">
+          <StepAction Container="{Using MaterialInspectorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="StopRotateInConveyorAction">
+          </StepAction>
+        </Step>
+        <Step Index="10" Name="AgvStopRotateConveyor" Wait="5" NextStepIndex="11">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvStopRotateConveyorAction">
+          </StepAction>
+        </Step>
+
+        <Step Index="11" Name="CheckIfHasAnotherTaskOne" Wait="5" NextStepIndex="12">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="CheckIfHasAnotherTaskOneAction">
+            <OutParameter ProcessParameter="HasNextTask" ActionParameter="HasNextTask" />
+            <OutParameter ProcessParameter="SelectedResources" ActionParameter="SelectedResources" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="HasNextTask" ConstValue="0" NextStepIndex="12" />
+            <StepCheck ProcessParameter="HasNextTask" ConstValue="1" NextStepIndex="15" />
+          </StepChecks>
+        </Step>
+
+
+        <!--分配需要执行接料的Machine-->
+        <Step Index="12" Name="AssignWaitPosition" Wait="5" NextStepIndex="13">
+          <StepAction Container="AgvTaskOneManager" Action="AssignWaitPositionAction">
+            <InParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+            <OutParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+          </StepAction>
+        </Step>
+        <Step Index="13" Name="AgvReadyToLeave" Wait="5" NextStepIndex="14">
+          <StepAction Container="{Using MaterialInspectorTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="AgvInReadyToLeaveAction">
+          </StepAction>
+        </Step>
+        <!--调用子程序-->
+        <Step Index="14" Name="CallSubProcess" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="Task1_SubProcess5_BackToWaitPosition" />
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="SelectedResources" />
+            <InParameter ActionParameter="SubProcessResources" ConstValue="SelectedResources" />
+          </StepAction>
+        </Step>
+
+        <Step Index="15" Name="CallSubProcess" Wait="5" NextStepIndex="-1">
+          <StepAction Container="Common" Action="CallProcessAction">
+            <InParameter ActionParameter="ProcessName" ConstValue="Task1_SubProcess2_ReceiveEmptyTray" />
+            <InParameter ActionParameter="ParameterDictionary" ProcessParameter="SelectedResources" />
+            <InParameter ActionParameter="SubProcessResources" ConstValue="SelectedResources" />
+          </StepAction>
+        </Step>
+
+      </Steps>
+    </Resource>
+
+    <!--定义Task1子流程: Task1_SubProcess5_返回Agv待机位-->
+    <Resource Type="Process" Name="Task1_SubProcess5_BackToWaitPosition" Enable="true" LogOutput="true"
+              AllowAsync="true"
+              IsProcessRecord="false" NeedDataSync="True">
+      <!--
+      <BreakCondition Type="SingleTagChangeCondition" Name="BreakCondition" Container="TestCallingMachine"
+                      Tag="BreakTag" />
+      -->
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName" />
+          <ParameterKeyValuePair Key="MachineName" />
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="WaitPositionNode" Type="string" />
+        <ProcessParameter Name="RequiredMaterialType" Type="string" />
+        <ProcessParameter Name="ResultCode" Type="int16" />
+        <ProcessParameter Name="ArriveTagValue" Type="int16" />
+      </ProcessParameters>
+      <Steps>
+        <!--获得待机位节点-->
+        <Step Index="1" Name="GetWaitPositionNode" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="GetNextNodeAction">
+            <OutParameter ActionParameter="NextNode" ProcessParameter="WaitPositionNode" />
+          </StepAction>
+        </Step>
+        <Step Index="2" Name="AgvMoveToWaitPosition" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}" Action="MoveForward">
+            <InParameter ActionParameter="TargetNode" ProcessParameter="WaitPositionNode" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="InspectElectricity" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="InspectElectricityAction">
+            <InParameter ActionParameter="ResultCode" ProcessParameter="ResultCode" />
+          </StepAction>
+          <StepChecks>
+            <!--检查执行结果代码,1是有异常，2是没有异常-->
+            <StepCheck ProcessParameter="ResultCode" ConstValue="1" NextStepIndex="4" />
+            <StepCheck ProcessParameter="ResultCode" ConstValue="2" NextStepIndex="5" />
+          </StepChecks>
+        </Step>
+        <Step Index="4" Name="LackElectricityAlarm" Wait="5" NextStepIndex="5">
+          <StepAction Container="AgvTaskOneManager" Action="LackElectricityAlarmAction">
+            <InParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+          </StepAction>
+        </Step>
+        <Step Index="5" Name="LackElectricityAlarm" Wait="5" NextStepIndex="-1">
+          <StepAction Container="AgvTaskOneManager" Action="DeleteTaskAction">
+            <InParameter ActionParameter="SelectedResources" ProcessParameter="SelectedResources" />
+          </StepAction>
+        </Step>
+      </Steps>
+
+    </Resource>
+
+
+  </Resources>
+</root>

@@ -1,0 +1,45 @@
+﻿<root>
+	<Configs>
+	</Configs>
+	<Resources>
+		<Resource Type="Machine" Name="ToyopucMachine" Enable="true">
+			<DataSources>
+				<DataSource Type="ToyopucDataSource" Name="ToyopucGroup" IPAddress="127.0.0.1" Port="5000" UpdateInterval="2200">
+
+					<Tag Name="K000" Address="K000" TagType="bool" />
+					<Tag Name="V000" Address="V000" TagType="bool" />
+					<Tag Name="T000" Address="T000" TagType="bool" />
+					<Tag Name="C000" Address="C000" TagType="bool" />
+					<Tag Name="L000" Address="L000" TagType="bool" />
+					<Tag Name="X000" Address="X000" TagType="bool" />
+					<Tag Name="Y000" Address="Y000" TagType="bool" />
+					<Tag Name="M000" Address="M000" TagType="bool" />
+
+
+					<Tag Name="S000" Address="S000" TagType="int16" />
+					<Tag Name="N000" Address="N000" TagType="byte" />
+					<Tag Name="R000" Address="R000" TagType="byte" />
+					<Tag Name="D000" Address="D000" TagType="byte" />
+					<Tag Name="B000" Address="B000" TagType="byte" />
+
+					<Tag Name="EK000" Address="EK000" TagType="bool" />
+					<Tag Name="EV000" Address="EV000" TagType="bool" />
+					<Tag Name="ET000" Address="ET000" TagType="bool" />
+					<Tag Name="EC000" Address="EC000" TagType="bool" />
+					<Tag Name="EL000" Address="EL000" TagType="bool" />
+					<Tag Name="EX000" Address="EX000" TagType="bool" />
+					<Tag Name="EY000" Address="EY000" TagType="bool" />
+					<Tag Name="EM000" Address="EM000" TagType="bool" />
+
+					<Tag Name="ES000" Address="ES000" TagType="byte" />
+					<Tag Name="EN000" Address="EN000" TagType="byte" />
+					<Tag Name="H000" Address="H000" TagType="byte" />
+					<Tag Name="U000" Address="U000" TagType="byte" />
+
+				</DataSource>
+			</DataSources>
+		</Resource>
+
+	</Resources>
+</root>
+

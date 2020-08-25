@@ -1,0 +1,261 @@
+<root>
+  <Configs>
+    <DBConnection Name="agvdb" Type="mysql"
+                  ConnectionString="server=localhost;Port=3306; user=root; password=123456;database=test;" />
+    <Redundancy Enable="false" SyncInterval="500" />
+  </Configs>
+
+  <Resources>
+    <!--定义资源模板-->
+    <ResourceTemplates>
+      <!--Agv通用动作模板-->
+      <ResourceTemplate Name="AgvPointer" TargetResourceType="VirtualAgv">
+        <Actions>
+          <!--Agv获取下一个节点-->
+          <Action Type="MoveToNextMachineAction" Name="MoveToNextMachineAction">
+          </Action>
+          
+          <!--Agv启动皮带轮旋转-->
+          <Action Type="AgvVirtualRotateConveyorAction" Name="AgvRotateConveyorAction">
+            <InParameter Name="AgvDirection" Type="int16" />
+            <InParameter Name="RotateDirection" Type="string" />
+          </Action>
+          <!--Agv停止皮带轮旋转-->
+          <Action Type="AgvVirtualStopRotateConveyorAction" Name="AgvStopRotateConveyorAction">
+          </Action>
+
+          <Action Type="TaskNearlyFinishAction" Name="TaskNearlyFinishAction">
+          </Action>
+          <Action Type="InspectElectricityAction" Name="InspectElectricityAction">
+            <OutParameter Name="ResultCode" Type="int16" />
+          </Action>
+          <Action Type="CheckIfHasAnotherTaskAction" Name="CheckIfHasAnotherTaskAction">
+            <OutParameter Name="HasNextTask" Type="int16" />
+            <OutParameterDictionary Name="SelectedResources" Type="string" />
+          </Action>
+
+          <Action Type="ShowAssignmentDetailsAction" Name="ShowAssignmentDetailsAction">
+            <OutParameter Name="AgvId" Type="string" />
+            <OutParameter Name="WaitZone" Type="int16" />
+            <OutParameter Name="TrayType" Type="int16" />
+            <OutParameter Name="MaterialType" Type="int16" />
+            <OutParameter Name="CallingMachine" Type="string" />
+          </Action>
+          <Action Type="SetNextMachineNodeAction" Name="SetNextMachineNodeAction">
+            <InParameter Name="MachineName" Type="string" />
+            <InParameter Name="MachineNode" Type="string" />
+            <OutDictionaryParameter Name="SelectedResources" Type="string" />
+          </Action>
+          <Action Type="ResetAssignmentAction" Name="ResetAssignmentAction">
+          </Action>
+          <Action Type="SetAgvTrayTypeAction" Name="SetAgvTrayTypeAction">
+            <InParameter Name="TrayType" Type="int16" />
+          </Action>
+          <Action Type="MoveToWaitPositionAction" Name="MoveToWaitPositionAction">
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+
+      <!--Machine通用动作-->
+      <ResourceTemplate Name="CommonMachineTemplate" TargetResourceType="Machine">
+        <Actions>
+          <!--进料码头动作-->
+          <Action Type="TagsAction" Name="MachineReadyAction">
+            <ActionItem Type="WriteTag" Tag="AgvArrived" ConstValue="1" />
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock" ConstValue="1" />
+            <ActionItem Type="WriteTag" Tag="AgvReady" ConstValue="1" />
+          </Action>
+
+          <Action Type="WaitTagOnOrOffAction" Name="WaitAllowLeaveTagOn">
+            <InParameter Name="WaitTagName" Type="string" ConstValue="AgvAllowLeave"/>
+            <InParameter Name="CheckCondition" Type="string" ConstValue="On"/>
+          </Action>
+
+          <Action Type="TagsAction" Name="AgvReadyToLeaveAction">
+            <ActionItem Type="WriteTag" Tag="AgvNodesLock" ConstValue="0" />
+            <ActionItem Type="WriteTag" Tag="AgvAllowLeave" ConstValue="0" />
+          </Action>
+        </Actions>
+      </ResourceTemplate>
+    </ResourceTemplates>
+
+    <Resource Name="UploaderTransferBIn" Type="Machine" ResourceTemplate="CommonMachineTemplate" Enable="true">
+      <DataSources>
+        <DataSource Name="上挂空盘中转码头" Type="MelsecFxNetDatasource" IP ="192.168.1.66" Port="5551" UpdateInterval="500">
+          <Tag Name="HasMaterial" Address="M200" TagType="bool" />
+          <Tag Name="AgvArrived" Address="M201" TagType="bool" />
+          <Tag Name="ConveyTray" Address="M202" TagType="bool" />
+          <Tag Name="AgvAllowLeave" Address="M203" TagType="bool" />
+          <Tag Name="AgvReady" Address="M204" TagType="bool" />
+          <Tag Name="AgvNodesLock" Address="M205" TagType="bool" />
+          <Tag Name="MaterialType" Address="D2000" TagType="int16" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+    <Resource Name="UploaderTransferBOut" Type="Machine" ResourceTemplate="CommonMachineTemplate" Enable="true">
+      <DataSources>
+        <DataSource Name="上挂空盘中转码头" Type="LinkedDataSource" LinkedMachineName="UploaderTransferBIn"
+                    LinkedDataSourceName="上挂空盘中转码头" LinkedIp="192.168.1.66" UpdateInterval="500">
+          <Tag Name="HasMaterial" Address="M210" TagType="bool" />
+          <Tag Name="AgvArrived" Address="M211" TagType="bool" />
+          <Tag Name="ConveyTray" Address="M212" TagType="bool" />
+          <Tag Name="AgvAllowLeave" Address="M213" TagType="bool" />
+          <Tag Name="AgvReady" Address="M214" TagType="bool" />
+          <Tag Name="AgvNodesLock" Address="M215" TagType="bool" />
+          <Tag Name="MaterialType" Address="D2000" TagType="int32" DefaultValue="1" />
+        </DataSource>
+      </DataSources>
+    </Resource>
+
+    <Resource Type="VirtualAgv" Index="1" Name="agv1_1" WaitZone="1" Enable="true"
+              IP="192.168.1.101"
+              Port="4101" LocalIP="192.168.1.100" LocalPort="3101" ResourceTemplate="AgvPointer"/>
+
+    <Resource Type="AgvControlCenter" Name="AGVControlCenter" UsingVirtualAgv="True" 
+              DbConnection="agvdb" Enable="true">
+      <Agvs>
+        <Agv Name="agv1_1" />
+      </Agvs>
+      <Actions>
+        <!--分配需要调用的资源-->
+        <Action Type="AssignAgvAction" Name="AssignAgvAction">
+          <InParameter Name="TargetNode" Type="string" />
+          <InParameter Name="WaitZone" Type="int16" />
+          <OutParameter Name="AgvId" Type="string" />
+        </Action>
+        <Action Type="SetAgvTaskAction" Name="SetAgvTaskAction">
+          <InParameter Name="AgvId" Type="string" />
+          <InParameter Name="MachineName" Type="string" />
+          <InParameter Name="TrayType" Type="int16"/>
+          <InParameter Name="MaterialType" Type="int16" />
+          <InParameter Name="CallingMachine" Type="string" />
+          <OutParameter Name="AgvTaskNumber" Type="int16" />
+          <OutDictionaryParameter Name="SelectedResources" Type="string" />
+        </Action>
+
+        <Action Type="LackElectricityAlarmAction" Name="LackElectricityAlarmAction">
+        </Action>
+        <Action Type="CheckIfAssignedAgvAction" Name="CheckIfAssignedAgvAction">
+          <InParameter Name="WaitZone" Type="int16" />
+          <InParameter Name="MachineName" Type="string" />
+          <OutParameter Name="HasAssignedAgv" Type="bool" />
+        </Action>
+      </Actions>
+    </Resource>
+
+    <Resource Type="Process" Name="TestProcess" Enable="false" LogOutput="true" AllowAsync="true">
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName"  Value="agv1_1"/>
+          <ParameterKeyValuePair Key="MachineName" Value="UploaderTransferBOut"/>
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="WaitTagName" Type="string" DefaultValue="AgvAllowLeave"/>
+        <ProcessParameter Name="WaitInterval" Type="int16" DefaultValue="1000"/>
+        <ProcessParameter Name="CallingMachine" Type="string" />
+        <ProcessParameter Name="CallingTag" Type="string" />
+        <ProcessParameter Name="WaitZone" Type="int16" />
+        <ProcessParameter Name="TrayType" Type="int16" />
+        <ProcessParameter Name="MaterialType" Type="int16" />
+        <ProcessParameter Name="AgvId" Type="string" />
+        <ProcessParameter Name="MachineName" Type="string" />
+        <ProcessParameter Name="MachineNode" Type="string" />
+      </ProcessParameters>
+
+      <Condition Type="MultiTagsOnCondition" Name="ConditionName" Container="MachineName" Tag="TagName">
+        <TrigTags>
+          <TrigTag Machine="UploaderTransferBOut" Tag="HasMaterial" />
+        </TrigTags>
+        <OutParameter MachineName="CallingMachine" TagName="CallingTag" />
+      </Condition>
+
+      <Steps>
+        <Step Index="1" Name="AgvRotateConveyor" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvRotateConveyorAction">
+            <InParameter ActionParameter="AgvDirection" ConstValue="1" />
+            <InParameter ActionParameter="RotateDirection" ConstValue="R" />
+          </StepAction>
+        </Step>
+        <Step Index="2" Name="MachineReady" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using CommonMachineTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="MachineReadyAction">
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="WaitAllowAgvLeaveTagOn" Wait="5" NextStepIndex="4">
+          <StepAction Container="{Using CommonMachineTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="WaitAllowLeaveTagOn">
+          </StepAction>
+        </Step>
+        <Step Index="4" Name="AgvStopRotateConveyor" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvStopRotateConveyorAction">
+          </StepAction>
+        </Step>
+        <Step Index="5" Name="AgvReadyToLeave" Wait="5" NextStepIndex="-1">
+          <StepAction Container="{Using CommonMachineTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="AgvReadyToLeaveAction">
+          </StepAction>
+        </Step>
+        
+      </Steps>
+    </Resource>
+
+
+    <Resource Type="Process" Name="TestProcess_RightDown" Enable="true" LogOutput="true" AllowAsync="true">
+      <ProcessParameters>
+        <ProcessParameterDictionary Name="SelectedResources" Type="string">
+          <ParameterKeyValuePair Key="AgvName"  Value="agv1_1"/>
+          <ParameterKeyValuePair Key="MachineName" Value="UploaderTransferBIn"/>
+        </ProcessParameterDictionary>
+        <ProcessParameter Name="WaitTagName" Type="string" DefaultValue="AgvAllowLeave"/>
+        <ProcessParameter Name="WaitInterval" Type="int16" DefaultValue="1000"/>
+        <ProcessParameter Name="CallingMachine" Type="string" />
+        <ProcessParameter Name="CallingTag" Type="string" />
+        <ProcessParameter Name="WaitZone" Type="int16" />
+        <ProcessParameter Name="TrayType" Type="int16" />
+        <ProcessParameter Name="MaterialType" Type="int16" />
+        <ProcessParameter Name="AgvId" Type="string" />
+        <ProcessParameter Name="MachineName" Type="string" />
+        <ProcessParameter Name="MachineNode" Type="string" />
+      </ProcessParameters>
+
+      <Condition Type="MultiTagsOffCondition" Name="ConditionName" Container="MachineName" Tag="TagName">
+        <TrigTags>
+          <TrigTag Machine="UploaderTransferBIn" Tag="HasMaterial" />
+        </TrigTags>
+        <OutParameter MachineName="CallingMachine" TagName="CallingTag" />
+      </Condition>
+
+      <Steps>
+        <Step Index="1" Name="MachineReady" Wait="5" NextStepIndex="2">
+          <StepAction Container="{Using CommonMachineTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="MachineReadyAction">
+          </StepAction>
+        </Step>
+        <Step Index="2" Name="AgvRotateConveyor" Wait="5" NextStepIndex="3">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvRotateConveyorAction">
+            <InParameter ActionParameter="AgvDirection" ConstValue="0" />
+            <InParameter ActionParameter="RotateDirection" ConstValue="L" />
+          </StepAction>
+        </Step>
+        <Step Index="3" Name="WaitAllowAgvLeaveTagOn" Wait="5" NextStepIndex="4">
+          <StepAction Container="{Using CommonMachineTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="WaitAllowLeaveTagOn">
+          </StepAction>
+        </Step>
+        <Step Index="4" Name="AgvStopRotateConveyor" Wait="5" NextStepIndex="5">
+          <StepAction Container="{Using AgvPointer, Binding {SelectedResources, Key=AgvName}}"
+                      Action="AgvStopRotateConveyorAction">
+          </StepAction>
+        </Step>
+        <Step Index="5" Name="AgvReadyToLeave" Wait="5" NextStepIndex="-1">
+          <StepAction Container="{Using CommonMachineTemplate, Binding {SelectedResources, Key=MachineName}}"
+                      Action="AgvReadyToLeaveAction">
+          </StepAction>
+        </Step>
+      </Steps>
+    </Resource>
+  </Resources>
+
+</root>
